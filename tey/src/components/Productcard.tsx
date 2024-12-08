@@ -13,7 +13,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   const { state, addItem, removeItem } = useCart();
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'; // Example: Check login status
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
   useEffect(() => {
     const isProductInCart = state.items.some(item => item.id === product.id);
