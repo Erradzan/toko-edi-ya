@@ -4,12 +4,18 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+interface SecretQuestion {
+  id: string;
+  question: string;
+}
+
 interface FormData {
   firstName: string;
   lastName: string;
   gender: string;
   email: string;
   phoneNumber: string;
+  address: string;
   username: string;
   role: string;
   password: string;
@@ -18,9 +24,9 @@ interface FormData {
 }
 
 const RegistrationForm: React.FC = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [secretQuestions, setSecretQuestions] = useState<any[]>([]);
+  const [secretQuestions, setSecretQuestions] = useState<SecretQuestion[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -30,6 +36,7 @@ const RegistrationForm: React.FC = () => {
     gender: '',
     email: '',
     phoneNumber: '',
+    address: '',
     username: '',
     role: '',
     password: '',
@@ -43,6 +50,7 @@ const RegistrationForm: React.FC = () => {
     gender: Yup.string().required('Gender is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
     phoneNumber: Yup.string().required('Phone number is required'),
+    address: Yup.string().required('Address is required'),
   });
 
   const stepTwoValidationSchema = Yup.object({
@@ -57,16 +65,28 @@ const RegistrationForm: React.FC = () => {
 
   const handleSubmit = async (values: FormData) => {
     try {
-      await axios.post(
-        'https://contemporary-milissent-gentaproject-897ea311.koyeb.app/register',
-        values
-      );
+      const userData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        gender: values.gender,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        address: values.address,
+        username: values.username,
+        role: values.role,
+        password: values.password,
+        question: values.question,
+        answer: values.answer,
+      };
+  
+      await axios.post('http://127.0.0.1:5000/register', userData);
       setSuccessMessage('Registration successful! Redirecting to sign-in...');
       setTimeout(() => {
         navigate('/sign-in');
       }, 2000);
-    } catch (error) {
-      alert('Registration failed. Please try again.');
+    } catch (error: any) {
+      setSuccessMessage(null);
+      alert(error.response?.data?.message || 'Registration failed. Please try again.');
       console.error(error);
     }
   };
@@ -75,14 +95,23 @@ const RegistrationForm: React.FC = () => {
     const fetchSecretQuestions = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/masterquestion');
-        setSecretQuestions(response.data);
+        const response = await axios.get('http://127.0.0.1:5000/masterquestion');
+        console.log('Full API Response:', JSON.stringify(response.data, null, 2));
+
+        if (response.data && Array.isArray(response.data.data)) {
+          setSecretQuestions(response.data.data);
+        } else {
+          console.error('Unexpected data format:', response.data);
+          setSecretQuestions([]);
+        }
       } catch (error) {
         console.error('Error fetching secret questions:', error);
+        setSecretQuestions([]);
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchSecretQuestions();
   }, []);
 
@@ -94,6 +123,10 @@ const RegistrationForm: React.FC = () => {
         <div className="bg-green-500 text-white p-2 rounded mb-4 text-center">
           {successMessage}
         </div>
+      )}
+
+      {isLoading && (
+        <div className="text-center text-gray-500">Loading secret questions...</div>
       )}
 
       <Formik
@@ -185,9 +218,27 @@ const RegistrationForm: React.FC = () => {
                   />
                 </div>
 
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2 text-black">Address</label>
+                  <Field
+                    type="text"
+                    name="address"
+                    className="w-full p-2 border rounded text-black"
+                  />
+                  <ErrorMessage
+                    name="address"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => setStep(2)}
+                  onClick={() => {
+                    if (Object.keys(touched).length > 0 && isValid) {
+                      setStep(2);
+                    }
+                  }}
                   disabled={!isValid || Object.keys(touched).length === 0}
                   className="w-full bg-blue-500 text-white p-2 rounded"
                 >
@@ -246,22 +297,18 @@ const RegistrationForm: React.FC = () => {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2 text-black">Secret Question</label>
-                  {isLoading ? (
-                    <p>Loading secret questions...</p>
-                  ) : (
-                    <Field
-                      as="select"
-                      name="question"
-                      className="w-full p-2 border rounded text-black"
-                    >
-                      <option value="">Select a Secret Question</option>
-                      {secretQuestions.map((question) => (
-                        <option key={question.id} value={question.id}>
-                          {question.question}
-                        </option>
-                      ))}
-                    </Field>
-                  )}
+                  <Field
+                    as="select"
+                    name="question"
+                    className="w-full p-2 border rounded text-black"
+                  >
+                    <option value="">Select a Question</option>
+                    {secretQuestions.map((question) => (
+                      <option key={question.id} value={question.id}>
+                        {question.question}
+                      </option>
+                    ))}
+                  </Field>
                   <ErrorMessage
                     name="question"
                     component="div"
@@ -283,8 +330,12 @@ const RegistrationForm: React.FC = () => {
                   />
                 </div>
 
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-                  Register
+                <button
+                  type="submit"
+                  disabled={!isValid}
+                  className="w-full bg-blue-500 text-white p-2 rounded"
+                >
+                  Submit
                 </button>
               </>
             )}
