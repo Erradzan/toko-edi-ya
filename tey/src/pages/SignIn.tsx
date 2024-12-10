@@ -66,7 +66,7 @@ const loginUser = async (userName: string, password: string) => {
 const forgotPassword = async (values: ForgotPasswordValues) => {
   try {
     const response = await axios.post(
-      'http://127.0.0.1:5000/login/forgotpassword',
+      'https://contemporary-milissent-gentaproject-897ea311.koyeb.app/login/forgotpassword',
       values,
       {
         headers: {
@@ -89,7 +89,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   const [errorFetchingQuestions, setErrorFetchingQuestions] = useState(false);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/masterquestion')
+    axios.get('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/masterquestion')
       .then((response) => {
         if (response.data?.data && Array.isArray(response.data.data)) {
           setSecurityQuestions(response.data.data);
