@@ -14,7 +14,6 @@ interface SignInProps {
 interface SignInFormValues {
   userName: string;
   password: string;
-  rememberMe: boolean;
 }
 
 interface ForgotPasswordValues {
@@ -28,7 +27,6 @@ interface ForgotPasswordValues {
 const initialSignInValues: SignInFormValues = {
   userName: '',
   password: '',
-  rememberMe: false,
 };
 
 const initialForgotPasswordValues: ForgotPasswordValues = {
@@ -58,7 +56,7 @@ const validationSchemaForgotPassword = Yup.object({
 
 const loginUser = async (userName: string, password: string) => {
   try {
-    const response = await axios.post('http://127.0.0.1:5000/login', { userName, password });
+    const response = await axios.post('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/login', { userName, password });
     return response.data;
   } catch (err) {
     throw new Error('Failed to login. Please check your credentials.');
@@ -67,7 +65,6 @@ const loginUser = async (userName: string, password: string) => {
 
 const forgotPassword = async (values: ForgotPasswordValues) => {
   try {
-    console.log('Sending forgot password request with values:', values); // Log the values being sent
     const response = await axios.post(
       'http://127.0.0.1:5000/login/forgotpassword',
       values,
@@ -77,22 +74,8 @@ const forgotPassword = async (values: ForgotPasswordValues) => {
         },
       }
     );
-    console.log('Forgot password response:', response); // Log the response from the server
     return response.data;
-  } catch (err: unknown) {
-    console.error('Error in forgotPassword request:', err);
-
-    if (err instanceof Error) {
-      // If it's an instance of the Error class, log the error message
-      console.error('Error details:', err.message);
-    } else if ((err as any).response) {
-      // If the error has a `response` property (as is the case with Axios errors)
-      console.error('Server response error:', (err as any).response.data);
-    } else {
-      // For unknown error types, log a generic message
-      console.error('An unknown error occurred:', err);
-    }
-    
+  } catch (err) {
     throw new Error('Failed to process forgot password. Please try again.');
   }
 };
@@ -106,26 +89,16 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   const [errorFetchingQuestions, setErrorFetchingQuestions] = useState(false);
 
   useEffect(() => {
-    // Fetch the security questions from the backend
     axios.get('http://127.0.0.1:5000/masterquestion')
       .then((response) => {
-        console.log('API response:', response.data);
-        console.log('Forgot password response status:', response.status);
-        console.log('Forgot password response data:', response.data); // Check the actual response here
         if (response.data?.data && Array.isArray(response.data.data)) {
-          setSecurityQuestions(response.data.data); // Use response.data.data to set questions
+          setSecurityQuestions(response.data.data);
         } else {
           setErrorFetchingQuestions(true);
-          console.log('No questions found in response');
         }
       })
-      .catch(() => {
-        setErrorFetchingQuestions(true);
-        console.log('Error fetching security questions');
-      })
-      .finally(() => {
-        setLoadingQuestions(false);
-      });
+      .catch(() => setErrorFetchingQuestions(true))
+      .finally(() => setLoadingQuestions(false));
   }, []);
 
   const handleSignIn = async (
@@ -134,33 +107,28 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   ) => {
     try {
       const response = await loginUser(values.userName, values.password);
-      if (response?.access_token) {
-        login(response.access_token, values.rememberMe);
+      if (response?.access_token && response?.role) {
+        login(response.access_token, response.role);
         navigate('/');
       } else {
         setStatus('Invalid userName or password');
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setStatus(err.message || 'An error occurred. Please try again.');
-      } else {
-        setStatus('An unexpected error occurred');
-      }
+      setStatus(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setSubmitting(false);
     }
   };
+  
 
   const handleForgotPassword = async (
     values: ForgotPasswordValues,
     { setSubmitting, setStatus }: { setSubmitting: (isSubmitting: boolean) => void; setStatus: (status?: any) => void }
   ) => {
     try {
-      console.log('Handling forgot password with values:', values); // Log form values before sending
       const response = await forgotPassword(values);
       console.log('Forgot password response:', response);
     } catch (err: unknown) {
-      console.error('Error in forgot password handling:', err);
       setStatus(err instanceof Error ? err.message : 'An error occurred. Please try again.');
     } finally {
       setSubmitting(false);
@@ -199,10 +167,6 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                   className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500" />
-              </div>
-              <div className="mb-4 flex items-center">
-                <Field type="checkbox" name="rememberMe" id="rememberMe" className="mr-2" />
-                <label htmlFor="rememberMe" className={`${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Remember Me</label>
               </div>
               <button
                 type="submit"
@@ -267,7 +231,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                 <Field
                   type="text"
                   name="answer"
-                  placeholder="Your answer"
+                  placeholder="Enter your answer"
                   className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
                 />
                 <ErrorMessage name="answer" component="div" className="text-red-500" />
@@ -283,7 +247,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                 <ErrorMessage name="password" component="div" className="text-red-500" />
               </div>
               <div className="mb-4">
-                <label className={`block ${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Repeat Password:</label>
+                <label className={`block ${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Repeat New Password:</label>
                 <Field
                   type="password"
                   name="repeat_password"
@@ -297,7 +261,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                 className="w-full bg-blue-500 text-white py-2 rounded"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Processing...' : 'Reset Password'}
+                {isSubmitting ? 'Submitting...' : 'Reset Password'}
               </button>
               <button
                 type="button"
