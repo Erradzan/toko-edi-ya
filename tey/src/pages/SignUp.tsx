@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import qs from 'qs';  // Import qs library
+import qs from 'qs';
 
 interface SecretQuestion {
   id: string;
@@ -77,11 +77,10 @@ const RegistrationForm: React.FC = () => {
         answer: values.answer,
       };
 
-      // Use qs.stringify to serialize the data
       const serializedData = qs.stringify(userData);
 
       await axios.post('http://127.0.0.1:5000/register', serializedData, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // Set the content type to URL-encoded
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
 
       setSuccessMessage('Registration successful! Redirecting to sign-in...');

@@ -56,7 +56,6 @@ const validationSchemaForgotPassword = Yup.object({
     .oneOf([Yup.ref('password'), ''], 'Passwords must match'),
 });
 
-// Axios requests
 const loginUser = async (userName: string, password: string) => {
   try {
     const response = await axios.post('http://127.0.0.1:5000/login', { userName, password });
@@ -81,7 +80,7 @@ const forgotPassword = async (values: ForgotPasswordValues) => {
     console.log('Forgot password response:', response); // Log the response from the server
     return response.data;
   } catch (err: unknown) {
-    console.error('Error in forgotPassword request:', err); // Log error details
+    console.error('Error in forgotPassword request:', err);
 
     if (err instanceof Error) {
       // If it's an instance of the Error class, log the error message
@@ -103,8 +102,8 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   const { login } = useAuth();
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [securityQuestions, setSecurityQuestions] = useState<{ id: string; question: string }[]>([]);
-  const [loadingQuestions, setLoadingQuestions] = useState(true); // To handle loading state
-  const [errorFetchingQuestions, setErrorFetchingQuestions] = useState(false); // To handle API errors
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [errorFetchingQuestions, setErrorFetchingQuestions] = useState(false);
 
   useEffect(() => {
     // Fetch the security questions from the backend
@@ -159,9 +158,9 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
     try {
       console.log('Handling forgot password with values:', values); // Log form values before sending
       const response = await forgotPassword(values);
-      console.log('Forgot password response:', response); // Log server response
+      console.log('Forgot password response:', response);
     } catch (err: unknown) {
-      console.error('Error in forgot password handling:', err); // Log the error
+      console.error('Error in forgot password handling:', err);
       setStatus(err instanceof Error ? err.message : 'An error occurred. Please try again.');
     } finally {
       setSubmitting(false);
@@ -172,7 +171,6 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
     <div className={`flex flex-col items-center justify-center min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <h1 className="text-3xl font-bold mb-8 text-[#f03846]">{isForgotPassword ? 'Forgot Password' : 'Sign In'}</h1>
 
-      {/* Sign In Form */}
       {!isForgotPassword && (
         <Formik
           initialValues={initialSignInValues}
@@ -225,7 +223,6 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
         </Formik>
       )}
 
-      {/* Forgot Password Form */}
       {isForgotPassword && (
         <Formik
           initialValues={initialForgotPasswordValues}
