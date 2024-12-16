@@ -13,16 +13,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   const { state, addItem, removeItem } = useCart();
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
+  // Check authentication status from localStorage
+  const isAuthenticated = Boolean(localStorage.getItem('authToken'));
 
   useEffect(() => {
-    const isProductInCart = state.items.some(item => item.id === product.id);
+    // Update cart state when items change
+    const isProductInCart = state.items.some((item) => item.id === product.id);
     setIsAddedToCart(isProductInCart);
   }, [state.items, product.id]);
 
-  const handleCartToggle = () => {
+  const handleCartToggle = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent parent click handler from triggering
+
     if (!isAuthenticated) {
-      setIsModalOpen(true);
+      setIsModalOpen(true); // Show modal if user is not logged in
       return;
     }
 
@@ -45,15 +50,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           alt={product.title}
           className="w-full h-56 object-contain mb-2 rounded"
         />
-        <h2 className="text-md font-semibold mb-1">{product.title}</h2>
-        <p className="text-gray-700 text-lg">${product.price.toFixed(2)}</p>
+        <h2 className="text-md font-semibold mb-1 truncate" title={product.title}>
+          {product.title}
+        </h2>
+        <p className="text-gray-700 text-lg">Rp. {product.price.toFixed(2)}</p>
 
-        <div
-          className="absolute bottom-2 right-2 z-50"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleCartToggle();
-          }}
+        <button
+          className="absolute bottom-2 right-2 z-30 p-2"
+          onClick={handleCartToggle}
+          aria-label={isAddedToCart ? 'Remove from cart' : 'Add to cart'}
         >
           <FaShoppingCart
             size={24}
@@ -61,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               isAddedToCart ? 'text-[#f03846]' : 'text-gray-500'
             }`}
           />
-        </div>
+        </button>
       </div>
 
       <Modal

@@ -18,7 +18,7 @@ interface SignInFormValues {
 
 interface ForgotPasswordValues {
   userName: string;
-  question: string;
+  question: number;
   answer: string;
   password: string;
   repeat_password: string;
@@ -31,7 +31,7 @@ const initialSignInValues: SignInFormValues = {
 
 const initialForgotPasswordValues: ForgotPasswordValues = {
   userName: '',
-  question: '',
+  question: 0,
   answer: '',
   password: '',
   repeat_password: '',
@@ -44,7 +44,7 @@ const validationSchemaSignIn = Yup.object({
 
 const validationSchemaForgotPassword = Yup.object({
   userName: Yup.string().required('Required'),
-  question: Yup.string().required('Required'),
+  question: Yup.number().required('Required'),
   answer: Yup.string().required('Required'),
   password: Yup.string()
     .required('Required')
@@ -56,7 +56,7 @@ const validationSchemaForgotPassword = Yup.object({
 
 const loginUser = async (userName: string, password: string) => {
   try {
-    const response = await axios.post('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/login', { userName, password });
+    const response = await axios.post('https://vicious-damara-gentaproject-0a193137.koyeb.app/login', { userName, password });
     return response.data;
   } catch (err) {
     throw new Error('Failed to login. Please check your credentials.');
@@ -64,15 +64,14 @@ const loginUser = async (userName: string, password: string) => {
 };
 
 const forgotPassword = async (values: ForgotPasswordValues) => {
+  const payload = {
+    ...values,
+    question: Number(values.question),
+  };
   try {
     const response = await axios.post(
-      'https://contemporary-milissent-gentaproject-897ea311.koyeb.app/login/forgotpassword',
-      values,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      'https://vicious-damara-gentaproject-0a193137.koyeb.app/login/forgotpassword',
+      payload,
     );
     return response.data;
   } catch (err) {
@@ -87,9 +86,10 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   const [securityQuestions, setSecurityQuestions] = useState<{ id: string; question: string }[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [errorFetchingQuestions, setErrorFetchingQuestions] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/masterquestion')
+    axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/masterquestion')
       .then((response) => {
         if (response.data?.data && Array.isArray(response.data.data)) {
           setSecurityQuestions(response.data.data);
@@ -107,11 +107,11 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   ) => {
     try {
       const response = await loginUser(values.userName, values.password);
-      if (response?.access_token && response?.role) {
-        login(response.access_token, response.role);
+      if (response?.access_token && response?.role && response?.user_id) {
+        login(response.access_token, response.role, response.user_id);
         navigate('/');
       } else {
-        setStatus('Invalid userName or password');
+        setStatus('Invalid username or password');
       }
     } catch (err: unknown) {
       setStatus(err instanceof Error ? err.message : 'An unexpected error occurred');
@@ -119,7 +119,6 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
       setSubmitting(false);
     }
   };
-  
 
   const handleForgotPassword = async (
     values: ForgotPasswordValues,
@@ -128,6 +127,11 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
     try {
       const response = await forgotPassword(values);
       console.log('Forgot password response:', response);
+      setSuccessMessage('Password reset successful. Redirecting...');
+      setTimeout(() => {
+        setSuccessMessage(null);
+        window.location.reload();
+      }, 2000);
     } catch (err: unknown) {
       setStatus(err instanceof Error ? err.message : 'An error occurred. Please try again.');
     } finally {
@@ -196,6 +200,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
           {({ isSubmitting, status }) => (
             <Form className={`p-8 rounded-lg shadow-md w-full max-w-md ${isDarkMode ? 'bg-white text-gray-700' : 'bg-gray-700 text-white'}`}>
               {status && <div className="text-red-500 mb-4">{status}</div>}
+              {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
               <div className="mb-4">
                 <label className={`block ${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Username:</label>
                 <Field
@@ -220,7 +225,9 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                   >
                     <option value="">Select a question</option>
                     {securityQuestions.map((q) => (
-                      <option key={q.id} value={q.id}>{q.question}</option>
+                      <option key={q.id} value={q.id}>
+                        {q.question}
+                      </option>
                     ))}
                   </Field>
                 )}
@@ -261,7 +268,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
                 className="w-full bg-blue-500 text-white py-2 rounded"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Submitting...' : 'Reset Password'}
+                {isSubmitting ? 'Resetting Password...' : 'Reset Password'}
               </button>
               <button
                 type="button"

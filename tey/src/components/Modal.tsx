@@ -1,6 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../services/Api';
-
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +9,8 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
+  const navigate = useNavigate();
+
   if (!isOpen) return null;
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -17,8 +19,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
     }
   };
 
+  const handleCheckout = () => {
+    navigate(`/checkout?productId=${product.id}`);
+  };
+
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={handleOverlayClick}
     >
@@ -37,8 +43,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
           />
         </div>
         <h2 className="text-xl font-bold mb-2 text-white">{product.title}</h2>
-        <p className="text-white dark:text-gray-200 mb-2">${product.price.toFixed(2)}</p>
+        <p className="text-white dark:text-gray-200 mb-2">Rp. {product.price.toFixed(2)}</p>
         <p className="text-white dark:text-gray-400">{product.description}</p>
+        <button
+          onClick={handleCheckout}
+          className="mt-4 w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );

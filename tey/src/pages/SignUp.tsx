@@ -79,7 +79,7 @@ const RegistrationForm: React.FC = () => {
 
       const serializedData = qs.stringify(userData);
 
-      await axios.post('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/register', serializedData, {
+      await axios.post('https://vicious-damara-gentaproject-0a193137.koyeb.app/register', serializedData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
 
@@ -98,7 +98,7 @@ const RegistrationForm: React.FC = () => {
     const fetchSecretQuestions = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://contemporary-milissent-gentaproject-897ea311.koyeb.app/masterquestion');
+        const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/masterquestion');
         console.log('Full API Response:', JSON.stringify(response.data, null, 2));
 
         if (response.data && Array.isArray(response.data.data)) {
