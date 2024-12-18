@@ -1,8 +1,16 @@
 import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import { Product } from '../services/Api';
+import axios from 'axios';
 
-interface CartItem extends Product {
+interface CartItem {
+  ID: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  seller: string;
   quantity: number;
+  stock_qty: number;
 }
 
 interface CartState {
@@ -16,11 +24,11 @@ interface CartAction {
 
 const CartContext = createContext<{
   state: CartState;
-  addItem: (product: Product) => void;
-  removeItem: (product: Product) => void;
+  addItem: (product: CartItem) => void;
+  removeItem: (product: CartItem) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
-}>({
+}>( {
   state: { items: [] },
   addItem: () => {},
   removeItem: () => {},
@@ -32,13 +40,13 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
       if (action.payload) {
-        const { id, quantity } = action.payload;
-        const existingItem = state.items.find(item => item.id === id);
+        const { ID, quantity } = action.payload;
+        const existingItem = state.items.find(item => item.ID === ID);
         if (existingItem) {
           return {
             ...state,
             items: state.items.map(item =>
-              item.id === id ? { ...item, quantity: item.quantity + quantity } : item
+              item.ID === ID ? { ...item, quantity: item.quantity + quantity } : item
             ),
           };
         } else {
@@ -49,21 +57,21 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     }
     case 'REMOVE_ITEM': {
       if (action.payload) {
-        const { id } = action.payload;
+        const { ID } = action.payload;
         return {
           ...state,
-          items: state.items.filter(item => item.id !== id),
+          items: state.items.filter(item => item.ID !== ID),
         };
       }
       return state;
     }
     case 'UPDATE_QUANTITY': {
       if (action.payload) {
-        const { id, quantity } = action.payload;
+        const { ID, quantity } = action.payload;
         return {
           ...state,
           items: state.items.map(item =>
-            item.id === id ? { ...item, quantity } : item
+            item.ID === ID ? { ...item, quantity } : item
           ),
         };
       }
@@ -78,12 +86,27 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const [, setProducts] = React.useState<CartItem[]>([]);
+
+  useEffect(() => {
+    axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/product')
+      .then(response => {
+        const products = response.data.data.map((item: any) => ({
+          ...item,
+          quantity: 1,
+        }));
+        setProducts(products);
+      })
+      .catch(error => {
+        console.error('Error fetching products', error);
+      });
+  }, []);
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cartItems') || '[]');
     if (Array.isArray(storedCart)) {
       storedCart.forEach((item: CartItem) => {
-        if (item && item.id) {
+        if (item && item.ID) {
           dispatch({ type: 'ADD_ITEM', payload: item });
         }
       });
@@ -94,15 +117,18 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.setItem('cartItems', JSON.stringify(state.items));
   }, [state.items]);
 
-  const addItem = (product: Product) => dispatch({ type: 'ADD_ITEM', payload: { ...product, quantity: 1 } });
-  const removeItem = (product: Product) => dispatch({ type: 'REMOVE_ITEM', payload: { ...product, quantity: 0 } });
+  const addItem = (product: CartItem) => dispatch({ type: 'ADD_ITEM', payload: { ...product, quantity: 1 } });
+  const removeItem = (product: CartItem) => dispatch({ type: 'REMOVE_ITEM', payload: { ...product, quantity: 0 } });
+
   const updateQuantity = (productId: number, quantity: number) => {
-    const itemToUpdate = state.items.find(item => item.id === productId);
+    const itemToUpdate = state.items.find(item => item.ID === productId);
     if (itemToUpdate) {
-      const updatedItem = { ...itemToUpdate, quantity };
+      const updatedQuantity = Math.min(quantity, itemToUpdate.stock_qty);
+      const updatedItem = { ...itemToUpdate, quantity: updatedQuantity };
       dispatch({ type: 'UPDATE_QUANTITY', payload: updatedItem });
     }
   };
+
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   return (
@@ -113,5 +139,4 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
-
 export default CartProvider;

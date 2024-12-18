@@ -1,6 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Product } from '../services/Api';
+
+interface Product {
+  ID: number;
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+  status: string;
+  rating: number | null;
+  seller: string;
+  stock_qty: number;
+}
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,9 +31,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
     }
   };
 
+  const formattedPrice = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(product.price);
+
   const handleCheckout = () => {
-    navigate(`/checkout?productId=${product.id}`);
+    navigate(`/checkout?productId=${product.ID}`);
   };
+
+  const rating = product.rating !== null ? product.rating : 0;
 
   return (
     <div
@@ -43,8 +62,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
           />
         </div>
         <h2 className="text-xl font-bold mb-2 text-white">{product.title}</h2>
-        <p className="text-white dark:text-gray-200 mb-2">Rp. {product.price.toFixed(2)}</p>
+        <p className="text-white dark:text-gray-200 mb-2">{formattedPrice}</p>
         <p className="text-white dark:text-gray-400">{product.description}</p>
+        <p className="text-white dark:text-gray-400">{product.status}</p>
+        <p className="text-white dark:text-gray-400">{product.seller}</p>
+        <p className="text-white dark:text-gray-400">Stock: {product.stock_qty}</p>
+        <p className="text-white dark:text-gray-400">Rating : {rating}/5</p>
         <button
           onClick={handleCheckout}
           className="mt-4 w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"

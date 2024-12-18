@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { useTheme } from '../context/Darkmode';
-import { FaHome, FaShoppingCart, FaMoon, FaSun, FaUser, FaList, FaPercent} from 'react-icons/fa';
+import { FaHome, FaShoppingCart, FaMoon, FaSun, FaUser, FaList, FaDollarSign} from 'react-icons/fa';
 import Logo from '../support/Logo.png';
 import { useCart } from '../context/CartContext';
 
@@ -24,23 +24,18 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
+      <div className="fixed top-0 left-0 w-full z-50 p-0 bg-white shadow-md">
         <div className="container mx-auto flex items-center justify-between p-4">
           <div className={`top-4 left-0 z-50 flex space-x-2 bg-white`}>
-            <img src={Logo} alt="Logo" className="w-50 h-14" />
+            <img src={Logo} alt="Logo" className="w-50 h-10" />
           </div>
           <div className="fixed top-4 right-4 z-50 flex space-x-2">
             {userRole === 'seller' ? (
               <>
-                <button className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-10 w-50`}>
-                  <Link to="/revenue">
-                    <span>Revenue</span>
-                  </Link>
-                </button>
                 <button 
                   onClick={logout}
                   className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-10 w-30`}>
-                  <span>Log Out</span>
+                  <span>Sign Out</span>
                 </button>
               </>
             ) : userRole === 'customer' ? (
@@ -60,7 +55,7 @@ const Sidebar: React.FC = () => {
                 <button 
                   onClick={logout}
                   className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-10 w-30`}>
-                  <span>Log Out</span>
+                  <span>Sign Out</span>
                 </button>
               </>
             ) : (
@@ -135,9 +130,9 @@ const Sidebar: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/promotions" className="flex items-center space-x-3 text-gray-800 dark:text-gray-200 hover:text-blue-500" onClick={toggleSidebar}>
-                  <FaPercent />
-                  <span>Promotions</span>
+                <Link to="/revenue" className="flex items-center space-x-3 text-gray-800 dark:text-gray-200 hover:text-blue-500" onClick={toggleSidebar}>
+                  <FaDollarSign />
+                  <span>Revenue</span>
                 </Link>
               </li>
             </>

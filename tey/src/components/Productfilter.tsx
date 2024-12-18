@@ -1,7 +1,4 @@
 import React from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
-import { useCart } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
 
 interface ProductFilterProps {
   selectedCategory: string;
@@ -30,20 +27,12 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   onMaxPriceChange,
   onSortChange
 }) => {
-  const { state } = useCart();
-  const navigate = useNavigate();
-  const cartItemCount = state.items.reduce((total, item) => total + item.quantity, 0);
-
-  const handleCartIconClick = () => {
-    navigate('/cart');
-  };
 
   const categories = [
     { value: 'all', label: 'All' },
-    { value: 'electronics', label: 'Electronics' },
-    { value: 'jewelery', label: 'Jewelery' },
-    { value: "men's clothing", label: "Men's Clothing" },
-    { value: "women's clothing", label: "Women's Clothing" }
+    { value: 'Fashion', label: 'Fashion' },
+    { value: 'Electronic', label: 'Electronic' },
+    { value: "Home & Supply", label: "Home & Supply" }
   ];
 
   const sortOptions = [
@@ -51,6 +40,8 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     { value: 'priceAsc', label: 'Price: Low to High' },
     { value: 'priceDesc', label: 'Price: High to Low' }
   ];
+
+  
 
   return (
     <div
@@ -99,21 +90,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
             </option>
           ))}
         </select>
-
-        <div className="relative">
-          <FaShoppingCart
-            size={36}
-            className={`transition-colors duration-200 cursor-pointer ${
-              cartItemCount > 0 ? 'text-[#f03846]' : 'text-gray-500'
-            }`}
-            onClick={handleCartIconClick}
-          />
-          {cartItemCount > 0 && (
-            <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-              {cartItemCount}
-            </span>
-          )}
-        </div>
       </div>
 
       <div
