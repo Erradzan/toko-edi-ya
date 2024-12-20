@@ -16,7 +16,7 @@ const CheckoutPage: React.FC = () => {
     // Fetch payment methods
     const fetchPaymentMethods = async () => {
       try {
-        const response = await axios.get('http://vicious-damara-gentaproject-0a193137.koyeb.app/paymentmethod');
+        const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/paymentmethod');
         if (response.data.data) {
           setPaymentMethods(response.data.data);
         } else {
@@ -51,28 +51,28 @@ const CheckoutPage: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.post(
-          'http://vicious-damara-gentaproject-0a193137.koyeb.app/transaction/', 
-          transactionData, 
-          {
-              headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json'
-              },
-              withCredentials: true,
-              validateStatus: (status) => {
-                  return status < 500; // Resolve only if status is less than 500
-              }
-          }
+        'https://vicious-damara-gentaproject-0a193137.koyeb.app/transaction',
+        transactionData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, PUT, PATCH, DELETE, GET',
+          },
+        }
       );
-      
+    
       if (response.status === 200) {
-          alert('Checkout successful!');
+        alert('Checkout successful!');
       } else {
-          alert(`Error: ${response.data.message || 'Something went wrong during checkout.'}`);
-      }} catch (error) {
-          console.error('Network error:', error);
-          alert('Network error. Please try again later.');
+        console.error('Error during checkout:', response.data);
+        alert(`Error: ${response.data.message || 'Something went wrong during checkout.'}`);
       }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error. Please try again later.');
+    }
   };
 
   return (
