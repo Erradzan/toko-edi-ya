@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import withTheme from '../../hocs/withTheme';
-import { useNavigate } from "react-router-dom";
 
 interface Transaction {
   transaction_id: number;
   product: string;
-  product_id: number;
   status: string;
   total_price: string;
 }
@@ -16,18 +14,9 @@ interface OrderProps {
   toggleTheme: () => void;
 }
 
-const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
+const Revenue: React.FC<OrderProps> = ({ isDarkMode }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const userRole = localStorage.getItem("userRole");
-
-    if (userRole !== "seller") {
-      navigate("/Unauthorized");
-    }
-  }, [navigate]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -61,29 +50,6 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
     return formatter.format(Number(amount));
   };
 
-  const updateTransactionStatus = async (
-    transaction_id: number,
-    product_id: number,
-    status: string
-  ) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      await axios.post(
-        "https://vicious-damara-gentaproject-0a193137.koyeb.app/transaction/seller",
-        { transaction_id, product_id, status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      alert(`Transaction updated to "${status}"`);
-    } catch (error) {
-      console.error("Error updating transaction:", error);
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -97,11 +63,9 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
             <thead className="bg-[#40b446]">
               <tr>
                 <th className="border border-gray-300 px-4 py-2 text-left text-black">Transaction ID</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-black">Product ID</th>
                 <th className="border border-gray-300 px-4 py-2 text-left text-black">Product</th>
                 <th className="border border-gray-300 px-4 py-2 text-left text-black">Status</th>
                 <th className="border border-gray-300 px-4 py-2 text-left text-black">Total Price</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-black">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -114,9 +78,6 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                     {transaction.transaction_id}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-black">
-                    {transaction.product_id}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-black">
                     {transaction.product}
                   </td>
                   <td className="border border-gray-300 px-4 py-2 capitalize text-black">
@@ -124,32 +85,6 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-black">
                     {formatCurrency(transaction.total_price)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-black">
-                    <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded mr-2"
-                      onClick={() =>
-                        updateTransactionStatus(
-                          transaction.transaction_id,
-                          transaction.product_id,
-                          "on_process"
-                        )
-                      }
-                    >
-                      On Process
-                    </button>
-                    <button
-                      className="bg-green-500 text-white py-1 px-4 rounded"
-                      onClick={() =>
-                        updateTransactionStatus(
-                          transaction.transaction_id,
-                          transaction.product_id,
-                          "on_delivery"
-                        )
-                      }
-                    >
-                      On Delivery
-                    </button>
                   </td>
                 </tr>
               ))}
@@ -161,4 +96,4 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
   );
 };
 
-export default withTheme(Order);
+export default withTheme(Revenue);

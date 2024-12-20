@@ -107,7 +107,7 @@ const Sidebar: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/order" className="flex items-center space-x-3 text-gray-800 dark:text-gray-200 hover:text-blue-500" onClick={toggleSidebar}>
+                <Link to="/orders" className="flex items-center space-x-3 text-gray-800 dark:text-gray-200 hover:text-blue-500" onClick={toggleSidebar}>
                   <FaList />
                   <span>Orders</span>
                 </Link>

@@ -340,11 +340,8 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
             )}
           </div>
         )}
-
         </div>
 
-        
-  
         <AddProductModal isOpen={isAddProductModalOpen} onClose={handleCloseAddProductModal} />
         {isDiscountModalOpen && <DiscountModal isOpen={isDiscountModalOpen} onClose={handleCloseDiscountModal} />}
         {isModalOpen && <UpdateModal userProfile={userProfile} onClose={handleCloseModal} />}

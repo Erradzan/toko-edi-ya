@@ -10,6 +10,8 @@ import CartProvider from './context/CartContext';
 import UnauthorizedPage from './pages/Unauthorized';
 import CheckoutPage from './pages/Customer/Checkout';
 import Order from './pages/Seller/Order';
+import Revenue from './pages/Seller/Revenue';
+import Orders from './pages/Customer/Orders';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +26,8 @@ const App: React.FC = () => {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/revenue" element={<Revenue />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </CartProvider>
   );
