@@ -330,7 +330,7 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
                           ))}
                         </ul>
                       </td>
-                      <td className="border px-4 py-2">{transaction.total_price}</td>
+                      <td className="border px-4 py-2">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseFloat(transaction.total_price))}</td>
                     </tr>
                   ))}
                 </tbody>
