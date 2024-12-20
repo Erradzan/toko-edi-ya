@@ -178,8 +178,8 @@ const RegistrationForm: React.FC = () => {
                 className="w-full p-2 border rounded text-black"
               >
                 <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
               </Field>
               <ErrorMessage
                 name="gender"

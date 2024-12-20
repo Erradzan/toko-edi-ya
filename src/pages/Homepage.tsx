@@ -32,7 +32,8 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
   const [error, setError] = useState<string | null>(null);
   const [sortChange, setSortChange] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+  const [statusChange, setStatusChange] = useState<string>('all');
 
   useEffect(() => {
     const fetchAndSortProducts = async () => {
@@ -84,6 +85,10 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
     setSortChange(e.target.value);
   };
 
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusChange(e.target.value);
+  };
+
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesCategory =
@@ -95,15 +100,17 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
         minPrice === '' || product.price >= parseFloat(minPrice);
       const matchesMaxPrice =
         maxPrice === '' || product.price <= parseFloat(maxPrice);
+      const matchesStatus = statusChange === 'all' || product.status === statusChange;
 
       return (
+        matchesStatus &&
         matchesCategory &&
         matchesSearchTerm &&
         matchesMinPrice &&
         matchesMaxPrice
       );
     });
-  }, [products, selectedCategory, searchTerm, minPrice, maxPrice]);
+  }, [products, selectedCategory, searchTerm, minPrice, maxPrice, statusChange]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -132,11 +139,13 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
           maxPrice={maxPrice}
           isDarkMode={isDarkMode}
           sortChange={sortChange}
+          statusChange={statusChange}
           onCategoryChange={handleCategoryChange}
           onSearchChange={handleSearchChange}
           onMinPriceChange={handleMinPriceChange}
           onMaxPriceChange={handleMaxPriceChange}
           onSortChange={handleSortChange}
+          onStatusChange={handleStatusChange}
         />
   
         {loading ? (
@@ -151,7 +160,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {currentItems.map((product) => (
                     <ProductCard key={product.ID} product={product} />
                   ))}
@@ -168,10 +177,10 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
                       onChange={handleItemsPerPageChange}
                       className="border border-gray-300 rounded p-2"
                     >
-                      <option value={6}>6</option>
-                      <option value={12}>12</option>
-                      <option value={15}>15</option>
+                      <option value={8}>8</option>
+                      <option value={16}>16</option>
                       <option value={24}>24</option>
+                      <option value={32}>32</option>
                     </select>
                   </div>
                   <div className="flex space-x-2">

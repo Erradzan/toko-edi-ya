@@ -17,6 +17,22 @@ interface UserProfile {
   userName: string;
 }
 
+interface Transaction {
+  Bank: string;
+  Transaction_id: number;
+  customer: string;
+  date: string;
+  order_products: {
+    product_name: string;
+    quantity: number;
+    seller: string;
+    sum_price: string;
+  }[];
+  payment_method: string | string[];
+  status: string;
+  total_price: string;
+}
+
 interface Product {
   ID: number;
   title: string;
@@ -46,11 +62,12 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filteredDiscounts, setFilteredDiscounts] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/');
+      navigate('/profile');
       return;
     }
 
@@ -104,10 +121,33 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
       }
     };
 
+    const fetchTransactions = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const role = localStorage.getItem('userRole');
+        if (role === 'customer') {
+          const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/historytransaction', {
+            headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            'Content-Type': 'application/json',
+            }
+            });
+          setTransactions(response.data.data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
     fetchProducts();
     fetchUserProfile();
     fetchDiscounts();
+    fetchTransactions();
   }, [isAuthenticated, navigate]);
+
+  const customerTransactions = transactions.filter(
+    (transaction) => transaction.customer === userProfile?.userName
+  );
 
   useEffect(() => {
     const role = localStorage.getItem('userRole');
@@ -193,19 +233,18 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
                 </button>
               </div>
               {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-2 gap-6">
                   {filteredProducts.map((product, index) => (
-                    <div key={index} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                    <div key={index} className="p-4 rounded-lg shadow-md">
                       <img
                         src={product.image}
                         alt={product.title}
-                        className="w-full h-40 object-cover rounded-md mb-4"
+                        className="w-full h-40 object-contain rounded-md mb-4"
                       />
                       <h3 className="text-xl font-semibold mb-2">{product.title}</h3>
-                      <p className="text-gray-700 dark:text-gray-300">Price: ${product.price}</p>
-                      <p className="text-gray-700 dark:text-gray-300">Stock: {product.stock_qty}</p>
-                      <p className="text-gray-700 dark:text-gray-300">Status: {product.status}</p>
-                      <p className="text-gray-700 dark:text-gray-300">Description: {product.description}</p>
+                      <p className="text-black">Price: ${product.price}</p>
+                      <p className="text-black">Stock: {product.stock_qty}</p>
+                      <p className="text-black">Status: {product.status}</p>
                     </div>
                   ))}
                 </div>
@@ -229,7 +268,7 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
               {filteredDiscounts.length > 0 ? (
                 <ul className="space-y-4">
                   {filteredDiscounts.map((discount: any) => (
-                    <li key={discount.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                    <li key={discount.id} className="p-4 rounded-lg">
                       <p>
                         <strong>Code:</strong> {discount.code}
                       </p>
@@ -254,7 +293,57 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
               )}
             </div>
           )}
+                  {localStorage.getItem('userRole') === 'customer' && (
+          <div className="mt-12">
+            <h3 className="text-xl font-bold mb-6">Transaction History</h3>
+            {customerTransactions.length > 0 ? (
+              <table className="w-full table-auto border-collapse border border-gray-300 dark:border-gray-700">
+                <thead>
+                  <tr className="bg-[#40b446]">
+                    <th className="border px-4 py-2">Transaction ID</th>
+                    <th className="border px-4 py-2">Date</th>
+                    <th className="border px-4 py-2">Bank</th>
+                    <th className="border px-4 py-2">Payment Method</th>
+                    <th className="border px-4 py-2">Status</th>
+                    <th className="border px-4 py-2">Products</th>
+                    <th className="border px-4 py-2">Total Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {customerTransactions.map((transaction) => (
+                    <tr key={transaction.Transaction_id}>
+                      <td className="border px-4 py-2">{transaction.Transaction_id}</td>
+                      <td className="border px-4 py-2">{new Date(transaction.date).toLocaleString()}</td>
+                      <td className="border px-4 py-2">{transaction.Bank}</td>
+                      <td className="border px-4 py-2">
+                        {Array.isArray(transaction.payment_method)
+                          ? transaction.payment_method.join(', ')
+                          : transaction.payment_method}
+                      </td>
+                      <td className="border px-4 py-2">{transaction.status}</td>
+                      <td className="border px-4 py-2">
+                        <ul>
+                          {transaction.order_products.map((product, idx) => (
+                            <li key={idx}>
+                              {product.quantity}x {product.product_name} (Seller: {product.seller}) - {product.sum_price}
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
+                      <td className="border px-4 py-2">{transaction.total_price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">No transactions found.</p>
+            )}
+          </div>
+        )}
+
         </div>
+
+        
   
         <AddProductModal isOpen={isAddProductModalOpen} onClose={handleCloseAddProductModal} />
         {isDiscountModalOpen && <DiscountModal isOpen={isDiscountModalOpen} onClose={handleCloseDiscountModal} />}

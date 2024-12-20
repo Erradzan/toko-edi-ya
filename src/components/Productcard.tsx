@@ -79,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <>
       <div
-        className="relative border border-black rounded p-4 shadow-sm hover:border-[#f03846] transition-shadow duration-200 w-60 cursor-pointer"
+        className="relative border border-black rounded p-4 shadow-sm hover:border-[#f03846] transition-shadow duration-200 w-70 cursor-pointer"
         onClick={handleCardClick}
       >
         <img
@@ -124,6 +124,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         message="Please Sign In to add items to your cart."
       />
     </>
+
   );
 };
 

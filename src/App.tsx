@@ -8,6 +8,8 @@ import Profile from './pages/Profile';
 import Sidebar from './components/Sidebar';
 import CartProvider from './context/CartContext';
 import UnauthorizedPage from './pages/Unauthorized';
+import CheckoutPage from './pages/Customer/Checkout';
+import Order from './pages/Seller/Order';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +22,8 @@ const App: React.FC = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order" element={<Order />} />
       </Routes>
     </CartProvider>
   );

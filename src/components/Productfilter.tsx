@@ -7,11 +7,13 @@ interface ProductFilterProps {
   maxPrice: string;
   isDarkMode: boolean;
   sortChange: string;
+  statusChange: string;
   onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onMinPriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onMaxPriceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSortChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onStatusChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const ProductFilter: React.FC<ProductFilterProps> = ({
@@ -20,12 +22,14 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   minPrice,
   maxPrice,
   isDarkMode,
+  statusChange,
   sortChange,
   onCategoryChange,
   onSearchChange,
   onMinPriceChange,
   onMaxPriceChange,
-  onSortChange
+  onSortChange,
+  onStatusChange
 }) => {
 
   const categories = [
@@ -41,7 +45,11 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     { value: 'priceDesc', label: 'Price: High to Low' }
   ];
 
-  
+  const status = [
+    { value: 'all', label: 'All' },
+    { value: 'secondhand', label: 'Secondhand' },
+    { value: 'handmade', label: 'Handmade' }
+  ];
 
   return (
     <div
@@ -90,10 +98,23 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
             </option>
           ))}
         </select>
+        <select
+          value={statusChange}
+          onChange={onStatusChange}
+          className={`p-2 rounded border ${
+            isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'border-gray-300'
+          } w-45`}
+        >
+          {status.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div
-        className={`flex flex-wrap gap-2 p-2 rounded border ${
+        className={`flex justify-center gap-2 p-2 ${
           isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'border-gray-300'
         }`}
       >

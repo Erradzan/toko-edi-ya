@@ -48,7 +48,7 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
     );
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     const selectedProducts = state.items.filter(item => selectedItems.includes(item.ID));
 
     if (selectedProducts.length === 0) {
@@ -64,28 +64,9 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
       totalAmount: selectedProducts.reduce((total, item) => total + item.price * item.quantity, 0),
     };
 
-    try {
-      const response = await fetch('https://vicious-damara-gentaproject-0a193137.koyeb.app/transaction', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transactionData),
-      });
+    navigate('/checkout', { state: transactionData });
 
-      if (response.ok) {
-        alert('Checkout successful!');
-        clearCart();
-        navigate('/success');
-      } else {
-        const error = await response.json();
-        console.error('Error during checkout:', error);
-        alert(`Error: ${error.message || 'Something went wrong during checkout.'}`);
-      }
-    } catch (err) {
-      console.error('Network error:', err);
-      alert('Network error. Please try again later.');
-    }
+    console.log('Transaction Data:', transactionData);
   };
 
   return (
