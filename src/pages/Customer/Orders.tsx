@@ -97,7 +97,7 @@ const Orders: React.FC<HistoryProps> = ({ isDarkMode }) => {
               : transaction
           )
         );
-        setSelectedProduct(product); // Open the modal with the selected product
+        setSelectedProduct(product);
       }
     } catch (error) {
       console.error("Error updating transaction status:", error);
@@ -119,7 +119,7 @@ const Orders: React.FC<HistoryProps> = ({ isDarkMode }) => {
         }
       );
       alert("Thank you for your rating!");
-      setSelectedProduct(null); // Close the modal
+      setSelectedProduct(null);
     } catch (error) {
       console.error("Error submitting rating:", error);
       alert("Failed to submit rating.");

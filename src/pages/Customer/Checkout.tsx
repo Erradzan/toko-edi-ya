@@ -13,7 +13,6 @@ const CheckoutPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch payment methods
     const fetchPaymentMethods = async () => {
       try {
         const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/paymentmethod');
