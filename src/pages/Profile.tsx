@@ -128,7 +128,7 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
         if (role === 'customer') {
           const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/historytransaction', {
             headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
             }
             });
@@ -242,7 +242,7 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
                         className="w-full h-40 object-contain rounded-md mb-4"
                       />
                       <h3 className="text-xl font-semibold mb-2">{product.title}</h3>
-                      <p className="text-black">Price: ${product.price}</p>
+                      <p className="text-black">Price: {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(product.price)}</p>
                       <p className="text-black">Stock: {product.stock_qty}</p>
                       <p className="text-black">Status: {product.status}</p>
                     </div>
