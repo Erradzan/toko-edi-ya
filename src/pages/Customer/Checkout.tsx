@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
 import axios from 'axios';
 
 const CheckoutPage: React.FC = () => {
-  const { state } = useCart();
   const navigate = useNavigate();
 
+  const [coItems, setCoItems] = useState<any[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<{ id: number; name: string; number: string }[]>([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number | null>(null);
   const [discountCode, setDiscountCode] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchCoItems = () => {
+      const items = localStorage.getItem('coItems');
+      if (items) {
+        setCoItems(JSON.parse(items));
+      }
+    };
+
     const fetchPaymentMethods = async () => {
       try {
         const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/paymentmethod');
@@ -27,6 +33,7 @@ const CheckoutPage: React.FC = () => {
       }
     };
 
+    fetchCoItems();
     fetchPaymentMethods();
   }, []);
 
@@ -36,7 +43,7 @@ const CheckoutPage: React.FC = () => {
       return;
     }
 
-    const products = state.items.map(item => ({
+    const products = coItems.map(item => ({
       product_id: item.ID,
       quantity: item.quantity,
     }));
@@ -59,9 +66,11 @@ const CheckoutPage: React.FC = () => {
           },
         }
       );
-    
+
       if (response.status === 200) {
         alert('Checkout successful!');
+        localStorage.removeItem('coItems');
+        navigate('/orders');
       } else {
         console.error('Error during checkout:', response.data);
         alert(`Error: ${response.data.message || 'Something went wrong during checkout.'}`);
@@ -81,7 +90,7 @@ const CheckoutPage: React.FC = () => {
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Cart Summary</h2>
         <ul>
-          {state.items.map(product => (
+          {coItems.map(product => (
             <li key={product.ID} className="border-b border-gray-300 py-2">
               <h3>{product.title}</h3>
               <p>
@@ -99,7 +108,7 @@ const CheckoutPage: React.FC = () => {
             style: 'currency',
             currency: 'IDR',
           }).format(
-            state.items.reduce((total, item) => total + item.price * item.quantity, 0)
+            coItems.reduce((total, item) => total + item.price * item.quantity, 0)
           )}
         </p>
       </div>

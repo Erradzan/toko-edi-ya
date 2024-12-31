@@ -13,7 +13,6 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
   const { isAuthenticated, userRole } = useAuth();
   const { state, removeItem, clearCart, updateQuantity } = useCart();
   const navigate = useNavigate();
-
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   useEffect(() => {
@@ -50,11 +49,14 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
 
   const handleCheckout = () => {
     const selectedProducts = state.items.filter(item => selectedItems.includes(item.ID));
-
+  
     if (selectedProducts.length === 0) {
       alert('Please select at least one item to check out.');
       return;
     }
+  
+    localStorage.setItem('coItems', JSON.stringify(selectedProducts));
+    selectedProducts.forEach(product => removeItem(product));
 
     const transactionData = {
       items: selectedProducts.map(item => ({
@@ -63,11 +65,10 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
       })),
       totalAmount: selectedProducts.reduce((total, item) => total + item.price * item.quantity, 0),
     };
-
     navigate('/checkout', { state: transactionData });
-
     console.log('Transaction Data:', transactionData);
   };
+  
 
   return (
     <div

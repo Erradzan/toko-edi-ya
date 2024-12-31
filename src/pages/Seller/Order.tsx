@@ -79,6 +79,7 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
         }
       );
       alert(`Transaction updated to "${status}"`);
+      window.location.reload();
     } catch (error) {
       console.error("Error updating transaction:", error);
     }
@@ -127,7 +128,11 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                   </td>
                   <td className="border border-gray-300 px-4 py-2 text-black">
                     <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded mr-2"
+                      className={`py-1 px-4 rounded mr-2 ${
+                        transaction.status === "pending"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                      }`}
                       onClick={() =>
                         updateTransactionStatus(
                           transaction.transaction_id,
@@ -135,18 +140,30 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                           "on_process"
                         )
                       }
+                      disabled={transaction.status !== "pending"} // Disable if not "pending"
                     >
                       On Process
                     </button>
                     <button
-                      className="bg-green-500 text-white py-1 px-4 rounded"
-                      onClick={() =>
-                        updateTransactionStatus(
-                          transaction.transaction_id,
-                          transaction.product_id,
-                          "on_delivery"
-                        )
-                      }
+                      className={`py-1 px-4 rounded ${
+                        transaction.status === "on_process"
+                          ? "bg-green-500 text-white"
+                          : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                      }`}
+                      onClick={() => {
+                        if (transaction.status !== "on_process") {
+                          alert(
+                            "You must click the 'On Process' button before proceeding to 'On Delivery'."
+                          );
+                        } else {
+                          updateTransactionStatus(
+                            transaction.transaction_id,
+                            transaction.product_id,
+                            "on_delivery"
+                          );
+                        }
+                      }}
+                      disabled={transaction.status !== "on_process"} // Disable if not "on_process"
                     >
                       On Delivery
                     </button>
