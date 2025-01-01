@@ -79,52 +79,57 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <>
       <div
-        className="relative border border-black rounded p-4 shadow-sm hover:border-[#f03846] transition-shadow duration-200 w-70 cursor-pointer"
+        className="relative border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-300 w-70 cursor-pointer"
         onClick={handleCardClick}
       >
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-56 object-contain mb-2 rounded"
+          className="w-full h-56 object-contain mb-3 rounded-lg bg-gray-100"
         />
-        <h2 className="text-md font-semibold mb-1 truncate" title={product.title}>
+        <h2 className="text-lg font-semibold mb-1 truncate text-gray-800" title={product.title}>
           {product.title}
         </h2>
-        <p className="text-gray-700 text-lg">{formattedPrice}</p>
-        <p className="text-gray-700 text-lg">{product.status}</p>
-        <p className="text-gray-700 text-lg">{product.seller}</p>
-        <p className="text-gray-700 text-lg">Rating: {rating}/5</p>
-
+        <p className="text-gray-600 text-base mb-1">{formattedPrice}</p>
+        <p className="text-gray-500 text-sm">{product.status}</p>
+        <p className="text-gray-500 text-sm">{product.seller}</p>
+        <p className="text-gray-500 text-sm">Rating: {rating}/5</p>
+    
         {!isSeller && (
           <button
-            className="absolute bottom-2 right-2 z-30 p-2"
+            className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-gray-100 hover:bg-[#f03846] transition-colors duration-200"
             onClick={handleCartToggle}
             aria-label={isAddedToCart ? 'Remove from cart' : 'Add to cart'}
           >
             <FaShoppingCart
               size={24}
               className={`transition-colors duration-200 ${
-                isAddedToCart ? 'text-[#f03846]' : 'text-gray-500'
+                isAddedToCart ? 'text-white' : 'text-gray-700'
               }`}
             />
+            <span
+              className="absolute -top-3 -right-3 bg-[#f03846] text-white text-xs font-bold rounded-full px-1.5 py-0.5"
+              style={{ display: isAddedToCart ? 'block' : 'none' }}
+            >
+              ✓
+            </span>
           </button>
         )}
       </div>
-
+    
       <Modal
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
         product={product}
       />
-
+    
       <ModalLogin
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         title="Login Required"
         message="Please Sign In to add items to your cart."
       />
-    </>
-
+  </>
   );
 };
 

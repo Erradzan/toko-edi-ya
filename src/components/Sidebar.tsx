@@ -26,18 +26,21 @@ const Sidebar: React.FC = () => {
     <>
       <div className="fixed top-0 left-0 w-full z-50 p-0 bg-white shadow-md">
         <div className="container mx-auto flex items-center justify-between p-4">
-          <div className={`top-4 left-0 z-50 flex space-x-2 bg-white`}>
-            <img src={Logo} alt="Logo" className="w-15 h-5 sm:h-8 sm:w-45 md:h-10 md:w-50 lg:h-10 lg:w-50 xl:h-10 xl:w-50" />
+          <div className="top-4 left-0 z-50 flex space-x-2 bg-white">
+            <img
+              src={Logo}
+              alt="Logo"
+              className="w-15 h-5 sm:h-8 sm:w-45 md:h-10 md:w-50 lg:h-10 lg:w-50 xl:h-10 xl:w-50"
+            />
           </div>
           <div className="fixed top-4 right-4 z-50 flex space-x-2">
             {userRole === 'seller' ? (
-              <>
-                <button 
-                  onClick={logout}
-                  className={`p-2 focus:outline-none  bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-24 sm:h-8 sm:w-24 md:h-10 md:w-50 lg:h-10 lg:w-50 xl:h-10 xl:w-50`}>
-                  <span>Sign Out</span>
-                </button>
-              </>
+              <button
+                onClick={logout}
+                className="p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-24 sm:h-8 sm:w-24 md:h-10 md:w-50 lg:h-10 lg:w-50 xl:h-10 xl:w-50"
+              >
+                <span>Sign Out</span>
+              </button>
             ) : userRole === 'customer' ? (
               <>
                 <div className="relative">
@@ -52,29 +55,31 @@ const Sidebar: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <button 
+                <button
                   onClick={logout}
-                  className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-10 w-30`}>
+                  className="p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-10 w-30"
+                >
                   <span>Sign Out</span>
                 </button>
               </>
             ) : (
               <>
-                <button className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-30`}>
+                <button className="p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-30">
                   <Link to="/signin">
                     <span>Sign In</span>
                   </Link>
                 </button>
-                <button className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-30`}>
+                <button className="p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-8 w-30">
                   <Link to="/signup">
                     <span>Sign Up</span>
                   </Link>
                 </button>
               </>
             )}
-            <button 
-              onClick={toggleSidebar} 
-              className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-18 w-10 ${isSidebarOpen ? 'z-30' : 'z-50'}`}>
+            <button
+              onClick={toggleSidebar}
+              className={`p-2 focus:outline-none bg-gray-200 dark:bg-[#40b446] text-gray-800 dark:text-gray-200 rounded-md flex flex-col justify-center items-center h-18 w-10 ${isSidebarOpen ? 'z-30' : 'z-50'}`}
+            >
               <span className={`block w-6 h-0.5 bg-current transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
               <span className={`block w-6 h-0.5 bg-current my-1 transition-opacity duration-300 ease-in-out ${isSidebarOpen ? 'opacity-0' : 'opacity-100'}`}></span>
               <span className={`block w-6 h-0.5 bg-current transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
@@ -82,9 +87,10 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
       </div>
+
       <div
-        className={`fixed top-0 right-0 w-64 h-screen p-4 shadow-lg transform transition-transform duration-300 ease-in-out z-40 flex items-center ${isSidebarOpen ? '-translate-x-0' : 'translate-x-full'} ${
-          isDarkMode ? 'bg-gray-800' : 'bg-[#40b446]'}`}>
+        className={`fixed top-0 right-0 w-64 h-screen p-4 shadow-lg transform transition-transform duration-300 ease-in-out z-40 flex items-center ${isSidebarOpen ? '-translate-x-0' : 'translate-x-full'} ${isDarkMode ? 'bg-gray-800' : 'bg-[#40b446]'}`}
+      >
         <ul className="space-y-6 w-full">
           <li>
             <Link to="/" className="flex items-center space-x-3 text-gray-800 dark:text-gray-200 hover:text-blue-500" onClick={toggleSidebar}>
@@ -98,6 +104,7 @@ const Sidebar: React.FC = () => {
               <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
             </button>
           </li>
+
           {userRole === 'customer' && (
             <>
               <li>
@@ -160,10 +167,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {isSidebarOpen && (
-        <div 
-          onClick={toggleSidebar} 
-          className="fixed inset-0 bg-black opacity-50 z-30"
-        ></div>
+        <div onClick={toggleSidebar} className="fixed inset-0 bg-black opacity-50 z-30"></div>
       )}
     </>
   );
