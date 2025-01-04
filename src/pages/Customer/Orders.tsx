@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import withTheme from "../../hocs/withTheme";
+import Dark from '../../support/Dark.png';
+import Light from '../../support/Light.png';
 
 interface Product {
   product_id: number;
@@ -131,7 +133,14 @@ const Orders: React.FC<HistoryProps> = ({ isDarkMode }) => {
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"} py-12`}>
+    <div className={`min-h-screen ${isDarkMode ? "text-white" : "text-gray-900"} py-12`}
+    style={{
+      backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+    }}
+    >
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6 text-center">Transaction History</h1>
         <div className="overflow-x-auto">

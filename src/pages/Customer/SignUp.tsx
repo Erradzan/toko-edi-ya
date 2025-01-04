@@ -4,6 +4,13 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
+import Dark from '../../support/Dark.png';
+import Light from '../../support/Light.png';
+import withTheme from '../../hocs/withTheme';
+
+interface SignUpProps {
+  isDarkMode: boolean;
+}
 
 interface SecretQuestion {
   id: string;
@@ -24,10 +31,11 @@ interface FormData {
   answer: string;
 }
 
-const RegistrationForm: React.FC = () => {
+const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [secretQuestions, setSecretQuestions] = useState<SecretQuestion[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1); // New state for tracking steps
   const navigate = useNavigate();
 
   const initialValues: FormData = {
@@ -63,20 +71,7 @@ const RegistrationForm: React.FC = () => {
   const handleSubmit = async (values: FormData) => {
     console.log('Form Data:', values);
     try {
-      const userData = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        email: values.email,
-        phoneNumber: values.phoneNumber,
-        address: values.address,
-        userName: values.userName,
-        role: values.role,
-        password: values.password,
-        question: values.question,
-        answer: values.answer,
-      };
-
+      const userData = { ...values };
       const serializedData = qs.stringify(userData);
 
       await axios.post('https://vicious-damara-gentaproject-0a193137.koyeb.app/register', serializedData, {
@@ -99,12 +94,9 @@ const RegistrationForm: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await axios.get('https://vicious-damara-gentaproject-0a193137.koyeb.app/masterquestion');
-        console.log('Full API Response:', JSON.stringify(response.data, null, 2));
-
         if (response.data && Array.isArray(response.data.data)) {
           setSecretQuestions(response.data.data);
         } else {
-          console.error('Unexpected data format:', response.data);
           setSecretQuestions([]);
         }
       } catch (error) {
@@ -118,213 +110,167 @@ const RegistrationForm: React.FC = () => {
     fetchSecretQuestions();
   }, []);
 
+  // Function to handle navigation between steps
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
+
   return (
-    <div className="max-w-md mx-auto p-4 border rounded shadow-lg mt-20 bg-white">
-      <h1 className="text-2xl font-bold mb-4 text-black">Register</h1>
-
-      {successMessage && (
-        <div className="bg-green-500 text-white p-2 rounded mb-4 text-center">
-          {successMessage}
-        </div>
-      )}
-
-      {isLoading && (
-        <div className="text-center text-gray-500">Loading secret questions...</div>
-      )}
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log('Form Data:', values);
-          handleSubmit(values);
-        }}
+    <div
+      className="h-screen"
+      style={{
+        backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div
+        className={`max-w-md mx-auto p-4 border rounded shadow-lg mt-20 ${
+          isDarkMode ? 'bg-[#888888]' : 'bg-white'
+        }`}
       >
-        {({ isValid, touched }) => (
-          <Form>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">First Name</label>
-              <Field
-                type="text"
-                name="firstName"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="firstName"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
+        <h1 className="text-2xl font-bold mb-4 text-black">Register</h1>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Last Name</label>
-              <Field
-                type="text"
-                name="lastName"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="lastName"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Gender</label>
-              <Field
-                as="select"
-                name="gender"
-                className="w-full p-2 border rounded text-black"
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </Field>
-              <ErrorMessage
-                name="gender"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Email</label>
-              <Field
-                type="email"
-                name="email"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Phone Number</label>
-              <Field
-                type="tel"
-                name="phoneNumber"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Address</label>
-              <Field
-                type="text"
-                name="address"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="address"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Username</label>
-              <Field
-                type="text"
-                name="userName"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="userName"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Role</label>
-              <Field
-                as="select"
-                name="role"
-                className="w-full p-2 border rounded text-black"
-              >
-                <option value="">Select Role</option>
-                <option value="seller">Seller</option>
-                <option value="customer">Customer</option>
-              </Field>
-              <ErrorMessage
-                name="role"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Password</label>
-              <Field
-                type="password"
-                name="password"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Secret Question</label>
-              <Field
-                as="select"
-                name="question"
-                className="w-full p-2 border rounded text-black"
-              >
-                <option value="">Select Question</option>
-                {secretQuestions.map((sq) => (
-                  <option key={sq.id} value={sq.id}>
-                    {sq.question}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="question"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-black">Answer</label>
-              <Field
-                type="text"
-                name="answer"
-                className="w-full p-2 border rounded text-black"
-              />
-              <ErrorMessage
-                name="answer"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <button
-                type="submit"
-                className="w-full p-3 bg-blue-500 text-white rounded"
-                disabled={!isValid || !touched}
-              >
-                Register
-              </button>
-            </div>
-          </Form>
+        {successMessage && (
+          <div className="bg-green-500 text-white p-2 rounded mb-4 text-center">{successMessage}</div>
         )}
-      </Formik>
+
+        {isLoading && <div className="text-center text-gray-500">Loading secret questions...</div>}
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values) => handleSubmit(values)}
+        >
+          {({ isValid }) => (
+            <Form>
+              {step === 1 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">First Name</label>
+                    <Field type="text" name="firstName" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Last Name</label>
+                    <Field type="text" name="lastName" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Gender</label>
+                    <Field as="select" name="gender" className="w-full p-2 border rounded text-black">
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </Field>
+                    <ErrorMessage name="gender" component="div" className="text-red-500 text-sm" />
+                  </div>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Email</label>
+                    <Field type="email" name="email" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Phone Number</label>
+                    <Field type="tel" name="phoneNumber" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Address</label>
+                    <Field type="text" name="address" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
+                  </div>
+                </>
+              )}
+
+              {step === 3 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Username</label>
+                    <Field type="text" name="userName" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Role</label>
+                    <Field as="select" name="role" className="w-full p-2 border rounded text-black">
+                      <option value="">Select Role</option>
+                      <option value="seller">Seller</option>
+                      <option value="customer">Customer</option>
+                    </Field>
+                    <ErrorMessage name="role" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Password</label>
+                    <Field type="password" name="password" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+                  </div>
+                </>
+              )}
+
+              {step === 4 && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Secret Question</label>
+                    <Field as="select" name="question" className="w-full p-2 border rounded text-black">
+                      <option value="">Select a question</option>
+                      {secretQuestions.map((q) => (
+                        <option key={q.id} value={q.id}>
+                          {q.question}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="question" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2 text-black">Answer</label>
+                    <Field type="text" name="answer" className="w-full p-2 border rounded text-black" />
+                    <ErrorMessage name="answer" component="div" className="text-red-500 text-sm" />
+                  </div>
+                </>
+              )}
+
+              <div className="flex justify-between mt-4">
+                {step > 1 && (
+                  <button
+                    type="button"
+                    className="bg-gray-500 text-white p-2 rounded"
+                    onClick={prevStep}
+                  >
+                    Back
+                  </button>
+                )}
+                {step < 4 && (
+                  <button
+                    type="button"
+                    className="bg-blue-500 text-white p-2 rounded"
+                    onClick={nextStep}
+                  >
+                    Next
+                  </button>
+                )}
+                {step === 4 && (
+                  <button
+                    type="submit"
+                    className={`bg-green-500 text-white p-2 rounded ${
+                      !isValid ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                    disabled={!isValid}
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };
 
-export default RegistrationForm;
+export default withTheme(RegistrationForm);

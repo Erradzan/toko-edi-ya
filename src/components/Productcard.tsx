@@ -31,9 +31,10 @@ interface CartItem {
 
 interface ProductCardProps {
   product: Product;
+  isDarkMode: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, isDarkMode }) => {
   const { state, addItem, removeItem } = useCart();
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -79,7 +80,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <>
       <div
-        className="relative border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-300 w-70 cursor-pointer"
+        className={`relative border ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-300 w-70 cursor-pointer`}
         onClick={handleCardClick}
       >
         <img
@@ -87,17 +88,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.title}
           className="w-full h-56 object-contain mb-3 rounded-lg bg-gray-100"
         />
-        <h2 className="text-lg font-semibold mb-1 truncate text-gray-800" title={product.title}>
+        <h2 className={`text-lg font-semibold mb-1 truncate ${isDarkMode ? 'text-white' : 'text-[#888888]'}`} title={product.title}>
           {product.title}
         </h2>
-        <p className="text-gray-600 text-base mb-1">{formattedPrice}</p>
-        <p className="text-gray-500 text-sm">{product.status}</p>
-        <p className="text-gray-500 text-sm">{product.seller}</p>
-        <p className="text-gray-500 text-sm">Rating: {rating}/5</p>
+        <p className={`text-gray-600 text-base mb-1 ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{formattedPrice}</p>
+        <p className={`text-gray-500 text-sm ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.status}</p>
+        <p className={`text-gray-500 text-sm ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.seller}</p>
+        <p className={`text-gray-500 text-sm ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>Rating: {rating}/5</p>
     
         {!isSeller && (
           <button
-            className="absolute bottom-3 right-3 z-30 p-2 rounded-full bg-gray-100 hover:bg-[#f03846] transition-colors duration-200"
+            className="absolute bottom-3 right-3 p-2 rounded-full bg-gray-100 hover:bg-[#f03846] transition-colors duration-200"
             onClick={handleCartToggle}
             aria-label={isAddedToCart ? 'Remove from cart' : 'Add to cart'}
           >

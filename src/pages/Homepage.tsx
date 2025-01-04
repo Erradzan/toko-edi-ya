@@ -5,6 +5,8 @@ import withTheme from '../hocs/withTheme';
 import ProductFilter from '../components/Productfilter';
 import { ClipLoader } from 'react-spinners';
 import Error from '../support/Error.png';
+import Dark from '../support/Dark.png';
+import Light from '../support/Light.png';
 
 interface HomePageProps {
   isDarkMode: boolean;
@@ -140,7 +142,15 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
 
   return (
     <div
-      className={`w-full ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}
+      className={`w-full min-h-screen ${
+        isDarkMode ? 'text-white' : 'text-gray-900'
+      }`}
+      style={{
+        backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="container max-w-full mx-auto p-4 pt-[100px]">
         <ProductFilter
@@ -195,7 +205,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                   {currentItems.map((product) => (
-                    <ProductCard key={product.ID} product={product} />
+                    <ProductCard key={product.ID} product={product} isDarkMode={isDarkMode} />
                   ))}
                 </div>
   

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/authContext';
 import withTheme from '../../hocs/withTheme';
+import Dark from '../../support/Dark.png';
+import Light from '../../support/Light.png';
 
 interface CartPageProps {
   isDarkMode: boolean;
@@ -73,6 +75,12 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
   return (
     <div
       className={`mx-auto p-4 pt-[100px] min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}
+      style={{
+        backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
     >
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
       {state.items.length === 0 ? (

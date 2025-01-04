@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Dark from '../../support/Dark.png';
+import Light from '../../support/Light.png';
+import withTheme from '../../hocs/withTheme';
 
-const CheckoutPage: React.FC = () => {
+interface CheckoutPageProps {
+  isDarkMode: boolean;
+}
+
+const CheckoutPage: React.FC<CheckoutPageProps> = ({ isDarkMode }) => {
   const navigate = useNavigate();
 
   const [coItems, setCoItems] = useState<any[]>([]);
@@ -82,7 +89,14 @@ const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto p-4 pt-[100px] min-h-screen bg-white text-gray-900">
+    <div className="mx-auto p-4 pt-[100px] min-h-screen bg-white text-gray-900"
+    style={{
+      backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+    }}
+    >
       <h1 className="text-2xl font-bold mb-4">Checkout</h1>
 
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
@@ -158,4 +172,4 @@ const CheckoutPage: React.FC = () => {
   );
 };
 
-export default CheckoutPage;
+export default withTheme(CheckoutPage);

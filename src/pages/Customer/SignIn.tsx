@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useAuth } from '../../context/authContext';
 import withTheme from '../../hocs/withTheme';
+import Dark from '../../support/Dark.png';
+import Light from '../../support/Light.png';
 
 interface SignInProps {
   isDarkMode: boolean;
@@ -140,7 +142,14 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div className={`flex flex-col items-center justify-center min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
+    style={{
+      backgroundImage: `url(${isDarkMode ? Dark : Light})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+    }}
+    >
       <h1 className="text-3xl font-bold mb-8 text-[#f03846]">{isForgotPassword ? 'Forgot Password' : 'Sign In'}</h1>
 
       {!isForgotPassword && (
