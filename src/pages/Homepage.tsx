@@ -3,6 +3,8 @@ import axios from 'axios';
 import ProductCard from '../components/Productcard';
 import withTheme from '../hocs/withTheme';
 import ProductFilter from '../components/Productfilter';
+import { ClipLoader } from 'react-spinners';
+import Error from '../support/Error.png';
 
 interface HomePageProps {
   isDarkMode: boolean;
@@ -32,7 +34,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
   const [error, setError] = useState<string | null>(null);
   const [sortChange, setSortChange] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const [statusChange, setStatusChange] = useState<string>('all');
 
   useEffect(() => {
@@ -87,6 +89,15 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusChange(e.target.value);
+  };
+
+  const onClearFilters = () => {
+    setSelectedCategory('all');
+    setSearchTerm('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSortChange('none');
+    setStatusChange('all');
   };
 
   const filteredProducts = useMemo(() => {
@@ -146,21 +157,43 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
           onMaxPriceChange={handleMaxPriceChange}
           onSortChange={handleSortChange}
           onStatusChange={handleStatusChange}
+          onClearFilters={onClearFilters}
         />
   
         {loading ? (
-          <p>Loading products...</p>
+          <div className="flex justify-center items-center h-64">
+            <ClipLoader color="#3498db" loading={loading} size={50} />
+            <p>Loading...</p>
+          </div>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
           <>
             {currentItems.length === 0 && searchTerm ? (
-              <p className="text-center text-red-500 mt-4">
-                No results found for "{searchTerm}".
-              </p>
+              <div className="text-center mt-10">
+                <img
+                  src={Error}
+                  alt="No results"
+                  className="w-64 mx-auto mb-4"
+                />
+                <p className="text-gray-600">No results found for "{searchTerm}".</p>
+                <button
+                  className="mt-4 bg-[#40b446] text-white px-4 py-2 rounded"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('all');
+                    setMinPrice('');
+                    setMaxPrice('');
+                    setSortChange('none');
+                    setStatusChange('all');
+                  }}
+                >
+                  Reset Filters
+                </button>
+              </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                   {currentItems.map((product) => (
                     <ProductCard key={product.ID} product={product} />
                   ))}
@@ -177,28 +210,27 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
                       onChange={handleItemsPerPageChange}
                       className="border border-gray-300 rounded p-2"
                     >
-                      <option value={8}>8</option>
-                      <option value={16}>16</option>
+                      <option value={12}>12</option>
                       <option value={24}>24</option>
-                      <option value={32}>32</option>
+                      <option value={36}>36</option>
+                      <option value={48}>48</option>
                     </select>
                   </div>
-                  <div className="flex space-x-2">
-                    {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                      (page) => (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`p-2 rounded ${
-                            currentPage === page
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-300'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    )}
+                  <div className="flex justify-center mt-6">
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        disabled={currentPage === page}
+                        className={`px-4 py-2 mx-1 rounded ${
+                          currentPage === page
+                            ? 'bg-[#40b446] text-white cursor-not-allowed'
+                            : 'bg-gray-200 hover:bg-gray-300'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </>
