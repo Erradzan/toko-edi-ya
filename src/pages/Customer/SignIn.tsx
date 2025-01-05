@@ -150,7 +150,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
       backgroundPosition: 'center',
     }}
     >
-      <h1 className="text-3xl font-bold mb-8 text-[#f03846]">{isForgotPassword ? 'Forgot Password' : 'Sign In'}</h1>
+      
 
       {!isForgotPassword && (
         <Formik
@@ -159,31 +159,32 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
           onSubmit={handleSignIn}
         >
           {({ isSubmitting, status }) => (
-            <Form className={`p-8 rounded-lg shadow-md w-full max-w-md ${isDarkMode ? 'bg-white text-gray-700' : 'bg-gray-700 text-white'}`}>
-              {status && <div className="text-red-500 mb-4">{status}</div>}
+            <Form className={`p-8 rounded-lg shadow-md w-full max-w-md ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}>
+              {status && <div className="flex items-center justify-center text-red-500">{status}</div>}
+              <h1 className="text-2xl font-bold mb-4 text-black">{isForgotPassword ? 'Forgot Password' : 'Sign In'}</h1>
               <div className="mb-4">
-                <label className={`block ${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Username:</label>
+                <label className="block text-black">Username:</label>
                 <Field
                   type="text"
                   name="userName"
                   placeholder="Enter your username"
-                  className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
+                  className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`}
                 />
                 <ErrorMessage name="userName" component="div" className="text-red-500" />
               </div>
               <div className="mb-4">
-                <label className={`block ${isDarkMode ? 'text-gray-700' : 'text-gray-100'}`}>Password</label>
+                <label className="block text-black">Password:</label>
                 <Field
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}
+                  className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`}
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500" />
               </div>
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded"
+                className="w-full bg-[#40b446] text-white py-2 rounded"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Signing In...' : 'Sign In'}
@@ -191,7 +192,7 @@ const SignIn: React.FC<SignInProps> = ({ isDarkMode }) => {
               <button
                 type="button"
                 onClick={() => setIsForgotPassword(true)}
-                className="text-blue-500 mt-4"
+                className="text-black mt-4"
               >
                 Forgot Password?
               </button>

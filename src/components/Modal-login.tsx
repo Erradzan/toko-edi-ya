@@ -16,7 +16,7 @@ const ModalLogin: React.FC<ModalProps> = ({ isOpen, onClose, title, message }) =
         <h2 className="text-lg font-bold mb-4">{title}</h2>
         <p className="mb-4">{message}</p>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-[#40b446] text-white px-4 py-2 rounded"
           onClick={onClose}
         >
           Close

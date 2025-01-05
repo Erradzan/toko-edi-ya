@@ -116,7 +116,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
 
   return (
     <div
-      className="h-screen"
+      className={`flex flex-col items-center justify-center min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
       style={{
         backgroundImage: `url(${isDarkMode ? Dark : Light})`,
         backgroundSize: 'cover',
@@ -125,9 +125,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
       }}
     >
       <div
-        className={`max-w-md mx-auto p-4 border rounded shadow-lg mt-20 ${
-          isDarkMode ? 'bg-[#888888]' : 'bg-white'
-        }`}
+        className={`p-8 rounded-lg shadow-md w-full max-w-md ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}
       >
         <h1 className="text-2xl font-bold mb-4 text-black">Register</h1>
 
@@ -135,7 +133,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
           <div className="bg-green-500 text-white p-2 rounded mb-4 text-center">{successMessage}</div>
         )}
 
-        {isLoading && <div className="text-center text-gray-500">Loading secret questions...</div>}
+        {isLoading && <div className="text-center text-black">Loading secret questions...</div>}
 
         <Formik
           initialValues={initialValues}
@@ -147,18 +145,18 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
               {step === 1 && (
                 <>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">First Name</label>
-                    <Field type="text" name="firstName" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">First Name:</label>
+                    <Field type="text" name="firstName" placeholder="Enter your first name" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Last Name</label>
-                    <Field type="text" name="lastName" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Last Name:</label>
+                    <Field type="text" name="lastName" placeholder="Enter your last name" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Gender</label>
-                    <Field as="select" name="gender" className="w-full p-2 border rounded text-black">
+                    <label className="block text-sm font-medium mb-2 text-black">Gender:</label>
+                    <Field as="select" name="gender" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`}>
                       <option value="">Select Gender</option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
@@ -171,18 +169,18 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
               {step === 2 && (
                 <>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Email</label>
-                    <Field type="email" name="email" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Email:</label>
+                    <Field type="email" name="email" placeholder="Enter your email" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Phone Number</label>
-                    <Field type="tel" name="phoneNumber" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Phone Number:</label>
+                    <Field type="tel" name="phoneNumber" placeholder="Enter your phone number" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Address</label>
-                    <Field type="text" name="address" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Address:</label>
+                    <Field type="text" name="address" placeholder="Enter your address" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
                   </div>
                 </>
@@ -191,13 +189,13 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
               {step === 3 && (
                 <>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Username</label>
-                    <Field type="text" name="userName" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Username:</label>
+                    <Field type="text" name="userName" placeholder="Enter your username" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Role</label>
-                    <Field as="select" name="role" className="w-full p-2 border rounded text-black">
+                    <label className="block text-sm font-medium mb-2 text-black">Role:</label>
+                    <Field as="select" name="role" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`}>
                       <option value="">Select Role</option>
                       <option value="seller">Seller</option>
                       <option value="customer">Customer</option>
@@ -205,8 +203,8 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                     <ErrorMessage name="role" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Password</label>
-                    <Field type="password" name="password" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Password:</label>
+                    <Field type="password" name="password" placeholder="Set your password" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
                   </div>
                 </>
@@ -216,7 +214,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                 <>
                   <div className="mb-4">
                     <label className="block text-sm font-medium mb-2 text-black">Secret Question</label>
-                    <Field as="select" name="question" className="w-full p-2 border rounded text-black">
+                    <Field as="select" name="question" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`}>
                       <option value="">Select a question</option>
                       {secretQuestions.map((q) => (
                         <option key={q.id} value={q.id}>
@@ -227,8 +225,8 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                     <ErrorMessage name="question" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2 text-black">Answer</label>
-                    <Field type="text" name="answer" className="w-full p-2 border rounded text-black" />
+                    <label className="block text-sm font-medium mb-2 text-black">Answer:</label>
+                    <Field type="text" name="answer" placeholder="Set your answer" className={`w-full px-3 py-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-white' : 'bg-white text-black border-gray-500'}`} />
                     <ErrorMessage name="answer" component="div" className="text-red-500 text-sm" />
                   </div>
                 </>
@@ -238,7 +236,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                 {step > 1 && (
                   <button
                     type="button"
-                    className="bg-gray-500 text-white p-2 rounded"
+                    className="bg-[#40b446] text-white p-2 rounded"
                     onClick={prevStep}
                   >
                     Back
@@ -247,7 +245,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                 {step < 4 && (
                   <button
                     type="button"
-                    className="bg-blue-500 text-white p-2 rounded"
+                    className="bg-[#40b446] text-white p-2 rounded"
                     onClick={nextStep}
                   >
                     Next
@@ -256,7 +254,7 @@ const RegistrationForm: React.FC<SignUpProps> = ({ isDarkMode }) => {
                 {step === 4 && (
                   <button
                     type="submit"
-                    className={`bg-green-500 text-white p-2 rounded ${
+                    className={`bg-[#40b446] text-white p-2 rounded ${
                       !isValid ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     disabled={!isValid}

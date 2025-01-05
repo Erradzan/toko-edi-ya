@@ -5,10 +5,14 @@ import { useTheme } from '../context/Darkmode';
 import { FaHome, FaShoppingCart, FaMoon, FaSun, FaUser, FaList, FaDollarSign, FaInstagram, FaTwitter, FaFacebook} from 'react-icons/fa';
 import Logo from '../support/Logo.png';
 import { useCart } from '../context/CartContext';
+import withTheme from '../hocs/withTheme';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isDarkMode: boolean;}
+
+const Sidebar: React.FC<SidebarProps> = ({ isDarkMode }) => {
   const { logout, userRole} = useAuth();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { toggleTheme } = useTheme();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { state } = useCart();
   const navigate = useNavigate();
@@ -24,9 +28,9 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50 p-0 bg-white shadow-md">
+      <div className={`fixed top-0 left-0 w-full z-50 p-0 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} shadow-md`}>
         <div className="container mx-auto flex items-center justify-between p-4">
-          <div className="top-4 left-0 z-50 flex space-x-2 bg-white">
+          <div className={`top-4 left-0 z-50 flex space-x-2 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}>
             <img
               src={Logo}
               alt="Logo"
@@ -173,4 +177,4 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar;
+export default withTheme(Sidebar);

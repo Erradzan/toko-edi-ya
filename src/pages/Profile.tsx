@@ -183,7 +183,7 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
   const handleCloseAddProductModal = () => setIsAddProductModalOpen(false);
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} py-12`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-bg-[#888888] text-white' : 'bg-white text-gray-900'} py-12`}>
       <div className="container mx-auto p-4">
         <div className={`flex flex-col md:flex-row items-center ${isDarkMode ? 'bg-gray-900 text-white border-white' : 'bg-white text-gray-900 border-black'} p-6 border-2 rounded-lg overflow-hidden`}>
           <div className="flex-none w-48 h-48 m-6">

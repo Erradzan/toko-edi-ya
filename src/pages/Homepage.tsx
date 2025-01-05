@@ -150,6 +150,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
       }}
     >
       <div className="container max-w-full mx-auto p-4 pt-[100px]">

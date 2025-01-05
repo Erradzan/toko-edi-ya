@@ -80,104 +80,103 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
   return isOpen ? (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center"
     style={{ alignItems: "flex-start", paddingTop: "5rem" }}>
-  <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-    <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
-    <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label className="block text-gray-700">Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700">Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Price</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Stock Quantity</label>
+            <input
+              type="number"
+              value={stockQty}
+              onChange={(e) => setStockQty(e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Category</label>
+            <select
+              value={category || ''}
+              onChange={(e) => setCategory(parseInt(e.target.value))}
+              className="w-full p-2 border rounded-lg"
+              required
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.category}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Product Image</label>
+            <input
+              type="file"
+              onChange={handleImageChange}
+              className="w-full p-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as 'secondhand' | 'handmade')}
+              className="w-full p-2 border rounded-lg"
+            >
+              <option value="secondhand">Secondhand</option>
+              <option value="handmade">Handmade</option>
+            </select>
+          </div>
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Adding...' : 'Add Product'}
+            </button>
+          </div>
+        </form>
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Price</label>
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Stock Quantity</label>
-        <input
-          type="number"
-          value={stockQty}
-          onChange={(e) => setStockQty(e.target.value)}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Category</label>
-        <select
-          value={category || ''}
-          onChange={(e) => setCategory(parseInt(e.target.value))}
-          className="w-full p-2 border rounded-lg"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.category}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Product Image</label>
-        <input
-          type="file"
-          onChange={handleImageChange}
-          className="w-full p-2 border rounded-lg"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Status</label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as 'secondhand' | 'handmade')}
-          className="w-full p-2 border rounded-lg"
-        >
-          <option value="secondhand">Secondhand</option>
-          <option value="handmade">Handmade</option>
-        </select>
-      </div>
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Adding...' : 'Add Product'}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
+    </div>
   ) : null;
 };
 
