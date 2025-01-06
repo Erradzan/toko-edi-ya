@@ -7,7 +7,6 @@ interface DiscountModalProps {
 }
 
 const DiscountModal: React.FC<DiscountModalProps> = ({ isOpen, onClose }) => {
-  const [title, setTitle] = useState('');
   const [code, setCode] = useState('');
   const [discountValue, setDiscountValue] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
@@ -19,7 +18,6 @@ const DiscountModal: React.FC<DiscountModalProps> = ({ isOpen, onClose }) => {
       await axios.post(
         'https://vicious-damara-gentaproject-0a193137.koyeb.app/discount',
         {
-          title,
           code,
           discount_value: parseFloat(discountValue),
           expiration_date: expirationDate,
@@ -45,13 +43,6 @@ const DiscountModal: React.FC<DiscountModalProps> = ({ isOpen, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-bold mb-4">Add Discount</h2>
         {error && <p className="text-red-500 mb-2">{error}</p>}
-        <input
-          type="text"
-          placeholder="Title"
-          className="w-full mb-3 p-2 border rounded"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
         <input
           type="text"
           placeholder="Code"
