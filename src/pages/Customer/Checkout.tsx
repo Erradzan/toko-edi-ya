@@ -97,76 +97,78 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ isDarkMode }) => {
       backgroundPosition: 'center',
     }}
     >
-      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+      <div className={`rounded border border-gray-300 ${isDarkMode ? 'bg-[#888888] text-white' : 'bg-white text-black'}`}>
+        <h1 className="text-2xl font-bold mb-6 text-center text-black">Checkout</h1>
 
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Cart Summary</h2>
-        <ul>
-          {coItems.map(product => (
-            <li key={product.ID} className="border-b border-gray-300 py-2">
-              <h3>{product.title}</h3>
-              <p>
-                Quantity: {product.quantity} x {new Intl.NumberFormat('id-ID', {
-                  style: 'currency',
-                  currency: 'IDR',
-                }).format(product.price)}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <p className="font-bold mt-2">
-          Total:{' '}
-          {new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-          }).format(
-            coItems.reduce((total, item) => total + item.price * item.quantity, 0)
-          )}
-        </p>
-      </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Cart Summary</h2>
+          <ul>
+            {coItems.map(product => (
+              <li key={product.ID} className="border-b border-gray-300 py-2">
+                <h3>{product.title}</h3>
+                <p>
+                  Quantity: {product.quantity} x {new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                  }).format(product.price)}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <p className="font-bold mt-2">
+            Total:{' '}
+            {new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+            }).format(
+              coItems.reduce((total, item) => total + item.price * item.quantity, 0)
+            )}
+          </p>
+        </div>
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Payment Method</h2>
-        <select
-          className="border border-gray-300 rounded p-2 w-40"
-          value={selectedPaymentMethod || ''}
-          onChange={e => setSelectedPaymentMethod(Number(e.target.value))}
-        >
-          <option value="" disabled>Select a payment method</option>
-          {paymentMethods.map(method => (
-            <option key={method.id} value={method.id}>
-              {method.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Payment Method</h2>
+          <select
+            className="border border-gray-300 rounded p-2 w-40"
+            value={selectedPaymentMethod || ''}
+            onChange={e => setSelectedPaymentMethod(Number(e.target.value))}
+          >
+            <option value="" disabled>Select a payment method</option>
+            {paymentMethods.map(method => (
+              <option key={method.id} value={method.id}>
+                {method.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">Discount Code</h2>
-        <input
-          type="text"
-          className="border border-gray-300 rounded p-2 w-40"
-          placeholder="Enter discount code"
-          value={discountCode}
-          onChange={e => setDiscountCode(e.target.value)}
-        />
-      </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Discount Code</h2>
+          <input
+            type="text"
+            className="border border-gray-300 rounded p-2 w-40"
+            placeholder="Enter discount code"
+            value={discountCode}
+            onChange={e => setDiscountCode(e.target.value)}
+          />
+        </div>
 
-      <div className="flex justify-between items-center">
-        <button
-          className="bg-gray-500 text-white p-2 rounded"
-          onClick={() => navigate('/cart')}
-        >
-          Back to Cart
-        </button>
-        <button
-          className="bg-blue-500 text-white p-2 rounded"
-          onClick={handleCheckout}
-        >
-          Complete Checkout
-        </button>
+        <div className="flex justify-between items-center">
+          <button
+            className="bg-gray-500 text-white p-2 rounded"
+            onClick={() => navigate('/cart')}
+          >
+            Back to Cart
+          </button>
+          <button
+            className="bg-blue-500 text-white p-2 rounded"
+            onClick={handleCheckout}
+          >
+            Complete Checkout
+          </button>
+        </div>
       </div>
     </div>
   );

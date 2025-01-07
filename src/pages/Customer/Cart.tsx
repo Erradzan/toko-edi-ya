@@ -74,7 +74,7 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
 
   return (
     <div
-      className={`mx-auto p-4 pt-[100px] min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}
+      className={`mx-auto p-4 pt-[100px] min-h-screen ${isDarkMode ? 'text-white' : ' text-black'}`}
       style={{
         backgroundImage: `url(${isDarkMode ? Dark : Light})`,
         backgroundSize: 'cover',
@@ -82,84 +82,86 @@ const CartPage: React.FC<CartPageProps> = ({ isDarkMode }) => {
         backgroundPosition: 'center',
       }}
     >
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-      {state.items.length === 0 ? (
-        <p>Your cart is empty, why are you still here? Buy something. Please??</p>
-      ) : (
-        <>
-          <ul>
-            {state.items.map(product => (
-              <li
-                key={product.ID}
-                className="border-b border-gray-300 py-2 flex justify-between items-center"
-              >
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.includes(product.ID)}
-                    onChange={() => toggleSelectItem(product.ID)}
-                    className="mr-4"
-                  />
-                  <div>
-                    <h2 className="text-lg font-semibold">{product.title}</h2>
-                    <p>
-                      {new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                      }).format(product.price)}
-                    </p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <button
-                        className="bg-gray-300 text-black px-2 py-1 rounded"
-                        onClick={() => handleQuantityChange(product.ID, product.quantity - 1)}
-                        disabled={product.quantity <= 1}
-                      >
-                        -
-                      </button>
-                      <span className="text-sm font-semibold">{product.quantity}</span>
-                      <button
-                        className="bg-gray-300 text-black px-2 py-1 rounded"
-                        onClick={() => handleQuantityChange(product.ID, product.quantity + 1)}
-                        disabled={product.quantity >= product.stock_qty}
-                      >
-                        +
-                      </button>
+      <div className={`rounded border border-gray-300 ${isDarkMode ? 'bg-[#888888] text-white' : 'bg-white text-black'}`}>
+        <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+        {state.items.length === 0 ? (
+          <p>Your cart is empty, why are you still here? Buy something. Please??</p>
+        ) : (
+          <>
+            <ul>
+              {state.items.map(product => (
+                <li
+                  key={product.ID}
+                  className="border-b border-gray-300 py-2 flex justify-between items-center"
+                >
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.includes(product.ID)}
+                      onChange={() => toggleSelectItem(product.ID)}
+                      className="mr-4"
+                    />
+                    <div>
+                      <h2 className="text-lg font-semibold">{product.title}</h2>
+                      <p>
+                        {new Intl.NumberFormat('id-ID', {
+                          style: 'currency',
+                          currency: 'IDR',
+                        }).format(product.price)}
+                      </p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <button
+                          className="bg-gray-300 text-black px-2 py-1 rounded"
+                          onClick={() => handleQuantityChange(product.ID, product.quantity - 1)}
+                          disabled={product.quantity <= 1}
+                        >
+                          -
+                        </button>
+                        <span className="text-sm font-semibold">{product.quantity}</span>
+                        <button
+                          className="bg-gray-300 text-black px-2 py-1 rounded"
+                          onClick={() => handleQuantityChange(product.ID, product.quantity + 1)}
+                          disabled={product.quantity >= product.stock_qty}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                  <button
+                    className="bg-[#f03846] text-white p-2 rounded"
+                    onClick={() => handleRemove(product.ID)}
+                  >
+                    &times;
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex justify-between items-center">
+              <button
+                className="bg-gray-500 text-white p-2 rounded"
+                onClick={() => navigate('/')}
+              >
+                Back
+              </button>
+              <div>
                 <button
-                  className="bg-[#f03846] text-white p-2 rounded"
-                  onClick={() => handleRemove(product.ID)}
+                  className="bg-[#f03846] text-white p-2 rounded mr-2"
+                  onClick={clearCart}
                 >
-                  &times;
+                  Clear Cart
                 </button>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 flex justify-between items-center">
-            <button
-              className="bg-gray-500 text-white p-2 rounded"
-              onClick={() => navigate('/')}
-            >
-              Back
-            </button>
-            <div>
-              <button
-                className="bg-[#f03846] text-white p-2 rounded mr-2"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </button>
-              <button
-                className="bg-blue-500 text-white p-2 rounded"
-                onClick={handleCheckout}
-              >
-                Checkout
-              </button>
+                <button
+                  className="bg-blue-500 text-white p-2 rounded"
+                  onClick={handleCheckout}
+                >
+                  Checkout
+                </button>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
