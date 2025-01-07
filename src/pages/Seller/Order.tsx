@@ -120,7 +120,7 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
               {transactions.map((transaction) => (
                 <tr
                   key={transaction.transaction_id}
-                  className="hover:bg-gray-50 transition duration-150"
+                  className={`hover:bg-[#40b446] transition duration-150 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}
                 >
                   <td className="border border-gray-300 px-4 py-2 text-black">
                     {transaction.transaction_id}
@@ -141,7 +141,7 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                     <button
                       className={`py-1 px-4 rounded mr-2 ${
                         transaction.status === "pending"
-                          ? "bg-blue-500 text-white"
+                          ? "bg-[#40b446] text-white"
                           : "bg-gray-500 text-gray-300 cursor-not-allowed"
                       }`}
                       onClick={() =>
@@ -151,7 +151,7 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                           "on_process"
                         )
                       }
-                      disabled={transaction.status !== "pending"} // Disable if not "pending"
+                      disabled={transaction.status !== "pending"}
                     >
                       On Process
                     </button>
@@ -174,7 +174,7 @@ const Order: React.FC<OrderProps> = ({ isDarkMode }) => {
                           );
                         }
                       }}
-                      disabled={transaction.status !== "on_process"} // Disable if not "on_process"
+                      disabled={transaction.status !== "on_process"}
                     >
                       On Delivery
                     </button>

@@ -212,7 +212,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDarkMode }) => {
   
                 <div className="flex justify-between items-center mt-4">
                   <div>
-                    <label htmlFor="itemsPerPage" className="mr-2">
+                    <label htmlFor="itemsPerPage" className="mr-2 text-black font-bold">
                       Items per page:
                     </label>
                     <select

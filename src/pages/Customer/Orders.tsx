@@ -158,7 +158,7 @@ const Orders: React.FC<HistoryProps> = ({ isDarkMode }) => {
             </thead>
             <tbody>
               {transactions.map((transaction) => (
-                <tr key={transaction.Transaction_id} className="hover:bg-gray-50 transition duration-150">
+                <tr key={transaction.Transaction_id} className={`hover:bg-[#40b446] transition duration-150 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}>
                   <td className="border border-gray-300 px-4 py-2 text-black">{transaction.Transaction_id}</td>
                   <td className="border border-gray-300 px-4 py-2 text-black">
                     {new Date(transaction.date).toLocaleString()}
@@ -183,8 +183,12 @@ const Orders: React.FC<HistoryProps> = ({ isDarkMode }) => {
                   <td className="border border-gray-300 px-4 py-2 text-black">
                     <button
                       onClick={() => updateTransactionStatus(transaction.Transaction_id, transaction.order_products[0])}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
-                      disabled={transaction.status === "complete"}
+                      className={`py-1 px-4 rounded mr-2 border border-black ${
+                        transaction.status === "on_delivery"
+                          ? "bg-[#40b446] text-white"
+                          : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                      }`}
+                      disabled={transaction.status !== "on_delivery"}
                     >
                       Complete
                     </button>
