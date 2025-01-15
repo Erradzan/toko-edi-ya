@@ -80,8 +80,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isDarkMode }) => {
   return (
     <>
       <div
-        className={`relative border ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-300 w-70 cursor-pointer`}
-        onClick={handleCardClick}
+        className={`relative border ${
+          isDarkMode ? 'bg-[#888888]' : 'bg-white'
+        } border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-105 transition-transform duration-300 w-70 cursor-pointer`}
+        onClick={() => {
+          if (isAuthenticated) {
+            handleCardClick();
+          } else {
+            setIsLoginModalOpen(true);
+          }
+        }}
       >
         <img
           src={product.image}
@@ -129,8 +137,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isDarkMode }) => {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         isDarkMode={isDarkMode}
-        title="Login Required"
-        message="Please Sign In to add items to your cart."
+        title="Sign In Required"
+        message="Please Sign In to use this feature"
       />
   </>
   );
