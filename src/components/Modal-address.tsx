@@ -5,9 +5,10 @@ interface AddAddressModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: number;
+  isDarkMode: boolean;
 }
 
-const AddAddressModal: React.FC<AddAddressModalProps> = ({ isOpen, onClose, userId }) => {
+const AddAddressModal: React.FC<AddAddressModalProps> = ({ isOpen, onClose, userId, isDarkMode }) => {
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -51,7 +52,7 @@ const AddAddressModal: React.FC<AddAddressModalProps> = ({ isOpen, onClose, user
   };
 
   return isOpen ? (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className={`fixed inset-0 flex items-center justify-center ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50`}>
       <div className="bg-white rounded-lg p-6 w-96">
         <h2 className="text-xl font-bold mb-4">Add New Address</h2>
         <textarea

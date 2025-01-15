@@ -9,9 +9,10 @@ interface Category {
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isDarkMode: boolean
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
+const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, isDarkMode }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
@@ -69,7 +70,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
         }
       );
       console.log('Product added successfully:', response.data);
-      onClose(); // Close modal after submission
+      onClose();
     } catch (error) {
       console.error('Error adding product:', error);
     } finally {
@@ -78,7 +79,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
   };
 
   return isOpen ? (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center"
+    <div className={`fixed inset-0 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50 flex justify-center items-center`}
     style={{ alignItems: "flex-start", paddingTop: "5rem" }}>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">Add New Product</h2>

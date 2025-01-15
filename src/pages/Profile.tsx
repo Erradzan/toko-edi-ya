@@ -438,21 +438,27 @@ const Profile: React.FC<ProfileProps> = ({ isDarkMode }) => {
         <AddProductModal
           isOpen={isAddProductModalOpen}
           onClose={handleCloseAddProductModal}
+          isDarkMode={isDarkMode}
         />
         {isDiscountModalOpen && (
           <DiscountModal
             isOpen={isDiscountModalOpen}
             onClose={handleCloseDiscountModal}
+            isDarkMode={isDarkMode}
           />
         )}
         {isModalOpen && (
-          <UpdateModal userProfile={userProfile} onClose={handleCloseModal} />
+          <UpdateModal userProfile={userProfile}
+          onClose={handleCloseModal}
+          isDarkMode={isDarkMode}
+          />
         )}
         {isAddAddressModalOpen && (
           <AddAddressModal
             isOpen={isAddAddressModalOpen}
             onClose={handleCloseAddAddressModal}
             userId={parseInt(localStorage.getItem("userId") || "0", 10)}
+            isDarkMode={isDarkMode}
           />
         )}
       </div>

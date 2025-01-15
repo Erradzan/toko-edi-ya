@@ -18,9 +18,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: Product;
+  isDarkMode: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product, isDarkMode }) => {
   const navigate = useNavigate();
 
   if (!isOpen) return null;
@@ -44,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className={`fixed inset-0 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50 flex items-center justify-center z-50`}
       onClick={handleOverlayClick}
     >
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-lg relative max-w-4xl mx-auto">
