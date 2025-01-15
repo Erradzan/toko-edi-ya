@@ -12,8 +12,8 @@ const ModalLogin: React.FC<ModalProps> = ({ isOpen, onClose, title, message, isD
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50 z-50`}>
-      <div className="bg-white p-6 rounded shadow-md">
+    <div className={`fixed inset-0 flex items-center justify-center bg-opacity-50 z-50`}>
+      <div className={`${isDarkMode ? 'bg-[#888888]' : 'bg-white'} p-6 rounded shadow-md`}>
         <h2 className="text-lg font-bold mb-4">{title}</h2>
         <p className="mb-4">{message}</p>
         <button
