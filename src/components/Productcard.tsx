@@ -122,11 +122,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isDarkMode }) => {
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
         product={product}
+        isDarkMode={isDarkMode}
       />
     
       <ModalLogin
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+        isDarkMode={isDarkMode}
         title="Login Required"
         message="Please Sign In to add items to your cart."
       />

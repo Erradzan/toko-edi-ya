@@ -48,12 +48,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product, isDarkMode }) =
       className={`fixed inset-0 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50 flex items-center justify-center z-50`}
       onClick={handleOverlayClick}
     >
-      <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-lg relative max-w-4xl mx-auto">
+      <div className={`${isDarkMode ? 'bg-[#888888]' : 'bg-white'} p-4 rounded shadow-lg relative max-w-4xl mx-auto`}>
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 p-2 bg-gray-300 dark:bg-gray-700 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600"
+          className="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-400"
         >
-          <span className="text-lg text-gray-800 dark:text-gray-200">&times;</span>
+          <span className={`text-lg ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>&times;</span>
         </button>
         <div className="w-full h-64 overflow-hidden mb-4 rounded">
           <img
@@ -62,13 +62,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product, isDarkMode }) =
             className="w-full h-full object-contain"
           />
         </div>
-        <h2 className="text-xl font-bold mb-2 text-white">{product.title}</h2>
-        <p className="text-white dark:text-gray-200 mb-2">{formattedPrice}</p>
-        <p className="text-white dark:text-gray-400">{product.description}</p>
-        <p className="text-white dark:text-gray-400">{product.status}</p>
-        <p className="text-white dark:text-gray-400">{product.seller}</p>
-        <p className="text-white dark:text-gray-400">Stock: {product.stock_qty}</p>
-        <p className="text-white dark:text-gray-400">Rating : {rating}/5</p>
+        <h2 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.title}</h2>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{formattedPrice}</p>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.description}</p>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.status}</p>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>{product.seller}</p>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>Stock: {product.stock_qty}</p>
+        <p className={`mb-2${isDarkMode ? 'text-white' : 'text-[#888888]'}`}>Rating : {rating}/5</p>
         <button
           onClick={handleCheckout}
           className="mt-4 w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"

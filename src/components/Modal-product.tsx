@@ -81,7 +81,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, isDa
   return isOpen ? (
     <div className={`fixed inset-0 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'} bg-opacity-50 flex justify-center items-center`}
     style={{ alignItems: "flex-start", paddingTop: "5rem" }}>
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className={`${isDarkMode ? 'bg-[#888888]' : 'bg-white'} p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto`}>
         <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
