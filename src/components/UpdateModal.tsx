@@ -10,9 +10,10 @@ interface UserProfile {
 interface UpdateModalProps {
   userProfile: UserProfile;
   onClose: () => void;
+  isDarkMode: boolean
 }
 
-const UpdateModal: React.FC<UpdateModalProps> = ({ userProfile, onClose }) => {
+const UpdateModal: React.FC<UpdateModalProps> = ({ userProfile, onClose, isDarkMode }) => {
   const [formData, setFormData] = useState(userProfile);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -47,7 +48,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ userProfile, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center border z-50">
+    <div className={`fixed inset-0 bg-opacity-50 flex items-center justify-center border z-50 ${isDarkMode ? 'bg-[#888888]' : 'bg-white'}`}>
       <div className="bg-white p-6 rounded shadow-lg max-w-md w-full relative">
         <button
           onClick={onClose}
